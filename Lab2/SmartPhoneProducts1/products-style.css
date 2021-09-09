@@ -1,26 +1,31 @@
+/* General */
 body {
     width: 800px;
     margin: 0 auto;
-    background-image: url("./Images/phone_globe.jpg");
-    background: no-repeat center;
+    
 }
 
-section.item>img {
+/* Styling the products display */
+.item img {
     width: 200px;
     height: 200px;
 }
 
+/* Typography */
 h2, h1 {
     text-align: center;
 }
 
+/* Form styling */
 main {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
+    background: url(./Images/phone_globe.jpg) no-repeat 50% center;
 }
 
-div.item {
+/* block styling */ 
+body > div {
     border: 5px solid black;
     display: flex;
 }
