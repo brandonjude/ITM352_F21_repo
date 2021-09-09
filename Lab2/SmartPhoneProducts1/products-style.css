@@ -21,6 +21,7 @@ main {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
+    filter: brightness(50%);
     background: url(./Images/phone_globe.jpg) no-repeat 50% center;
 }
 
