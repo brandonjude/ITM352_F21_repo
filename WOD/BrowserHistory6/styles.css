@@ -1,0 +1,33 @@
+h1, h2, h3 {
+    font-family: 'Oswald', sans-serif;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: yellow;
+    margin: 10px 50 10 50;
+    width: fit-content;
+    background: black;
+}
+
+img {
+    display: inline-block;
+    float: left;
+}
+
+
+div {
+    width: 300px;
+    float: left;
+    padding: 0px 10px 0px 10px;
+}
+
+ul > li {
+    display: inline-block;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+ul {
+    text-align: center;
+}
