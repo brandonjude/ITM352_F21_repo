@@ -46,7 +46,21 @@
 
     <div>
         <main>
-            <section class="item" onmouseover="this.className='item rotate'; spins_span.innerHTML= ++spins; hit_spin_span.innerHTML = (hits/spins).toFixed(2);  over_half = over_half || spins < (2 * hits) && hits < spins; win_span.innerHTML = over_half;" onclick="this.className='item'; hits_span.innerHTML = ++hits; hit_spin_span.innerHTML = (hits/spins).toFixed(2); over_half = over_half || spins < (2 * hits) && hits < spins; win_span.innerHTML = over_half;">
+            <section class="item" onmouseover="
+                if (this.className.includes('rotate') == false) {
+                    this.className='item rotate'; 
+                    spins_span.innerHTML= ++spins; 
+                    hit_spin_span.innerHTML = (hits/spins).toFixed(2);  
+                    over_half = over_half || spins < (2 * hits) && hits < spins; 
+                    win_span.innerHTML = over_half;
+                }" 
+            
+            onclick="this.className='item'; 
+            hits_span.innerHTML = ++hits; 
+            hit_spin_span.innerHTML = (hits/spins).toFixed(2); 
+            over_half = over_half || spins < (2 * hits) && hits < spins; 
+            win_span.innerHTML = over_half;">
+
                 <h2>HTC</h2>
                 <p>&dollar;40.00</p>
                 <img src="http://dport96.github.io/ITM352/morea/080.flow-control-II/HTC.jpg">
@@ -87,7 +101,7 @@
             document.write
             (`
             <table border="1" style="margin-left: auto; margin-right: auto; text-align: center;">
-            <tr><th colspan="2"><h1>Your One Stop For Used Phones - ${first_name[0]}.${last_name[0]}'s</h1></th></tr>
+            <tr><th colspan="2"><h1>Your One Stop For Used Phones - ${first_name[0]}.${last_name[0]}.'s</h1></th></tr>
             <tr><td>${line++}.</td><td><br />Copyright @ ${first_name} ${last_name}</td></tr>
             <tr><td>${line++}.</td><td>${now.getFullYear()}</td></tr>
             <tr><td>${line++}.</td><td>${(hours + 11) % 12 + 1}:${minutes} ${(hours < 12)?'AM':'PM'}</td></tr>
