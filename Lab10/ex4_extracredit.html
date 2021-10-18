@@ -8,18 +8,12 @@
     }
 
     tr:hover {background-color: yellow;}
-    
+
 </style>
 
 
 <table style="border: 1px solid black;text-align: center;">
-<tbody id="prodTableBody" onclick="
-new_row = this.appendChild(document.createElement('tr')); 
-for (i =1; i <= this.rows[0].cells.length; i++) {
-    new_cell = new_row.appendChild(document.createElement('td')); 
-    new_cell.innerHTML = 'xxx'; 
-}
-">
+<tbody id="prodTableBody">
 
     <tr style="border: 1px solid black;">
         <th style="border: 1px solid black;">Name</th>
@@ -44,7 +38,7 @@ for (i =1; i <= this.rows[0].cells.length; i++) {
      
         for (let prodObj of products) {
             document.write(`
-            <tr>
+            <tr onclick="document.getElementById('prodTableBody').removeChild(this);">
                 <td>${prodObj.name}</td>
                 <td>${prodObj.price}</td>
             </tr>
@@ -58,7 +52,25 @@ for (i =1; i <= this.rows[0].cells.length; i++) {
 
 </table>
 
+<input type="button" value="Add Row"
+onclick="
+new_row = document.getElementById('prodTableBody').appendChild(document.createElement('tr')); 
+new_row.onclick = function() {
+        new_row.parentNode.removeChild(new_row);
+    }
+for (i =1; i <= document.getElementById('prodTableBody').rows[0].cells.length; i++) {
+    new_cell = new_row.appendChild(document.createElement('td')); 
+    new_cell.innerHTML = 'xxx';  
+    
+}
+
+">
+
 <input type="button" value="Delete Last Row"
 onclick="
 prodTableBody.deleteRow([prodTableBody.rows.length - 1]);
 ">
+
+
+  
+
