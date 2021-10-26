@@ -1,8 +1,8 @@
 
-
+// checks if a string is a non-neg integer. Returns true if q is a non-neg int
+// If returnErros == true, the array errors is returned. Else returns true if q is nonNegInt
 function isNonNegInt(q, returnErrors = false) {
-    // checks if a string is a non-neg integer. Returns true if q is a non-neg int
-    // If returnErros == true, the array errors is returned. Else returns true if q is nonNegInt
+   
     errors = []; // assume no errors at first
     if (q == "") q ==0;
     if (Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
