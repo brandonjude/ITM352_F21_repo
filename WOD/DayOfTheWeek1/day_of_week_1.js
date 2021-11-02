@@ -1,6 +1,6 @@
-var day = 20;
-var month = 'July';
-var year = 2001;
+var day = 31;
+var month = 'October';
+var year = 2022;
 
 if (month == 'January' || 'February'){
     year_2 = year - 1;
