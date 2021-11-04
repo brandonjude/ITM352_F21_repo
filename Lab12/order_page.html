@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<script>
+    let params = (new URL(document.location)).searchParams;
+</script>
+
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,9 +13,11 @@
     <title>Document</title>
 </head>
 
+
+
 <body>
 
-    <form name="quantity_form" action="display_purchase.html" method="get">
+    <form name="quantity_form" action="" method="get">
         <label>Quantity Desired: </label>
         <input type="text" name="quantity_textbox" onkeyup="checkQuantityTextbox(this);">
         <span id='qty_textbox_message'>Enter a quantity</span>
@@ -22,20 +29,19 @@
 
 </html>
 
-
 <script>
 
 
-    function displayPurchase(){
+    function displayPurchase() {
         var qty = quantity_textbox.value;
         var err = isNonNegInt(qty, true);
-        if (err.length == 0){
+        if (err.length == 0) {
             document.write(`Thank for you for ordering ${qty} things!`);
         }
         else {
-            qty_textbox_message.innerHTML = "Error";
+            qty_textbox_message.innerHTML = `<font color="red">${err.join(" ")} "Enter valid quantity. ";</font>`
         }
-       
+
 
     }
 
@@ -59,4 +65,16 @@
 
     }
 
+
+
+</script>
+
+<script>
+    if (params.has('quantity_textbox')) {
+        quantity_form["quantity_textbox"].value = params.get('quantity_textbox');
+        checkQuantityTextbox(quantity_form["quantity_textbox"]);
+    }
+    if (params.get('quantity_textbox') > 0){
+        document.write(`Thank you for purchasing ${params.get('quantity_textbox')} things!`)
+    }
 </script>
