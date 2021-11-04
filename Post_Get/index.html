@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<script>
+    function checkLogin() {
+
+        var user_login_database = { "brandon": "brandon123", "leslie": "leslie123" };
+
+        var user = login_form["username"].value;
+        var passwd = login_form["password"].value;
+
+        if (user_login_database[user] == passwd) {
+            document.write(`Welcome ${user_login_database[user]}`);
+        }
+        else {
+            alert("Wrong password");
+        }
+
+
+
+    }
+</script>
+
+
+
+
+<body>
+
+    <form action="javascript:checkLogin()" name="login_form" method="post">
+
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username">
+        <br>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password">
+        <br>
+        <input type="submit" name="submit_button" id="submit_button" value="Submit!">
+
+    </form>
+
+
+
+</body>
+
+</html>
