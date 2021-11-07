@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <script src="./product_data.js"></script>
+    <link rel="stylesheet" href="./invoice_styles.css">
+</head>
+
+<body>
+
+
+    <div class="table_container">
+        <table>
+            <div class="table_header_container">
+                <tr>
+                    <thead>
+                        <th class="table_header">Item</th>
+                        <th class="table_header">Quantity</th>
+                        <th class="table_header">Price</th>
+                        <th class="table_header">Extended Price</th>
+                    </thead>
+                </tr>
+            </div>
+            <div class="table_rows_container">
+                <script>
+                    sub_total = 0;
+
+                    function isNonNegInt(q) {
+
+                        errors = []; // assume no errors at first
+                        if (q == "") q == 0;
+                        if (Number(q) != q) {
+                            errors.push('Not a number!'); // Check if string is a number value
+                            return true;
+                        }
+                        else {
+                            if (q < 0) {
+                                errors.push('Negative value!'); // Check if it is non-negative
+                                return true;
+                            }
+                            if (parseInt(q) != q) {
+                                errors.push('Not an integer!'); // Check that it is an integer
+                                return true;
+                            }
+
+                        }
+                    }
+
+                    function generate_item_rows() {
+
+                        for (i in products_array) {
+                            if (products_array[i]['quantity_purchased'] == 0) {
+                                continue;
+                            }
+                            if (isNonNegInt(products_array[i]['quantity_purchased']) == true) {
+                                extended_price = 0;
+                                sub_total = sub_total + extended_price;
+                                document.write(`
+                                <tr>
+                                <td class="invoice_text">${products_array[i]['name']}</td>
+                                <td class="invoice_text_unvalid">${products_array[i]['quantity_purchased']}<br>${errors}</td>
+                                <td class="invoice_text">$${products_array[i]['price']}</td>
+                                <td class="invoice_text">$${eval(extended_price)}</td>
+                                </tr>
+                                `)
+                            }
+                            else {
+                                extended_price = products_array[i]['price'] * products_array[i]['quantity_purchased'];
+                                sub_total = sub_total + extended_price;
+                                document.write(`
+                                <tr>
+                                <td class="invoice_text" >${products_array[i]['name']}</td>
+                                <td class="invoice_text">${products_array[i]['quantity_purchased']}</td>
+                                <td class="invoice_text">$${products_array[i]['price']}</td>
+                                <td class="invoice_text">$${eval(extended_price)}</td>
+                                </tr>
+                                `)
+                            }
+                        }
+                    }
+
+                    generate_item_rows();
+
+                    //compute tax
+                    var tax = sub_total * 0.0575;
+
+                    // compute shipping
+                    var shipping;
+
+                    // A subtotal $0 - $49.99 will be $2 shipping
+                    if (sub_total < 50) {
+                        shipping = 2;
+
+                        // A subtotal $50 - $99.99 will be $5 shipping
+                    } else if (sub_total < 100) {
+                        shipping = 5;
+
+                        // Subtotals over $100 will be charged 5% of the subtotal amount 
+                    } else {
+                        shipping = sub_total * .05;
+                    }
+
+                    //compute total 
+                    var total = tax + sub_total + shipping;
+
+
+
+
+                    document.write(`
+
+                        <tr>
+                        <td colspan="4" width="100%">&nbsp;</td>
+                        </tr>
+                        <tr>
+                        <td >Sub-total</td>
+                        <td >$${sub_total}</td>
+                        </tr>
+                        <tr>
+                        <td><span>Tax @ 5.75%</span></td>
+                        <td >$${tax.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                        <td >Shipping</td>
+                        <td >$${shipping.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                        <td><strong>Total</strong></td>
+                        <td><strong>$${total.toFixed(2)}</strong></td>
+                        </tr>
+                        </tbody>
+                        </table>
+                            `);
+                </script>
+            </div>
+        </table>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+.header_container {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    background-color: #2371DC;
+    width: 100vw;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+.welcome_container {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: #2371DC;
+
+}
+
+.item_container{
+    text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.item {
+    background:#2371DC ;
+    color: white;
+    text-align: center;
+    border-radius: 25px;
+    margin: 10px;
+}
+
+.item_name{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 120%;
+}
+
+.item_price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 90%;
+}
+
+.item_image {
+    width: 200px;
+    height: 200px; 
+    padding: 20px;
+
+}
