@@ -33,7 +33,7 @@ var products_array = [
 
 ];
 
-var product_quantities = [3,7,1,0,6]
+var product_quantities = [3,7,-1,0,6]
 
 for (i in products_array){
     products_array[i]["quantity_purchased"] = product_quantities[i];

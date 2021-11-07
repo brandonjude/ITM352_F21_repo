@@ -1,16 +1,30 @@
-.invoice_text {
-    text-align: center;
-    color: blue;
-    
-
+h2 {
+    font-family: 'Montserrat', sans-serif;
 }
 
-.table_header_container {
-    text-align: center;
-    color: black;
+table {
+    width: 50%;
 }
 
+thead, td {
+    width: 40%;
+    text-align: left;
+    font-family: 'Montserrat', sans-serif;
+}
 
-.table_container {
-    align-content: center;
+th {
+    border-bottom: 1px solid rgb(172, 195, 255);
+    font-family: 'Montserrat', sans-serif;
+}
+
+tr:nth-child(even){background-color: #dce7f7}
+
+tr {
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.unvalid_qty {
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(249, 59, 59);
 }
