@@ -47,3 +47,27 @@
     padding: 20px;
 
 }
+
+input[type="text"] {
+    width: 35px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    margin: 7px;
+
+}
+
+label{
+    font-family: 'Montserrat', sans-serif;
+}
+
+input[type="submit"]{
+    margin:0 auto;
+    display:block;
+    margin-top: 30px;
+    background-color: #5985c2;
+    color: white;
+    font-size: 120%;
+    cursor: pointer;
+    border-radius: 7px;
+    padding: 10px;
+}

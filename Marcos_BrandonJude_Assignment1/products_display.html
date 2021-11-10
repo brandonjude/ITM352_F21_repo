@@ -23,20 +23,31 @@
 
     <br>
     <br>
-
-    <div class="item_container">
-        <script>
-            for (i in products_array) {
-                document.write(`
-                <div class="item">
-                    <img class="item_image" src=${products_array[i].image} alt="">
-                    <p class="item_name">${products_array[i].name}</p>
-                    <p class="item_price">Price: $${products_array[i].price}</p>
-                </div>
-            `)
-            }
-        </script>
-    </div>
+    <form action="" name="" method="get">
+        <div class="item_container">
+        
+            <script>
+                for (i in products_array) {
+                    document.write(`
+                    <div class="item">
+                        <img class="item_image" src=${products_array[i].image} alt="">
+                        <p class="item_name">${products_array[i].name}</p>
+                        <p class="item_price">Price: $${products_array[i].price}</p>
+                        <label for="quantity_input">Qty</label>
+                        <input type="text" name="quantity_input" maxlength="3" value="0">
+    
+                    </div>
+                `)
+                }
+            </script>
+          
+        </div>
+            <div class="submit_container">
+                <input type="submit" name="submit_button" value="Checkout">
+             </div>
+    </form>
+        
+    
 
 
 
