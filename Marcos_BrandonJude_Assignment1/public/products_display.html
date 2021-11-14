@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fruit Store</title>
-    <script src="./product_data.js"></script>
+    <script src="/product_data.js"></script>
     <link rel="stylesheet" href="./products_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
 
     <br>
     <br>
-    <form action="" name="" method="get">
+    <form action="./invoice" name="purchase_form" method="post">
         <div class="item_container">
         
             <script>
@@ -34,7 +34,7 @@
                         <p class="item_name">${products_array[i].name}</p>
                         <p class="item_price">Price: $${products_array[i].price}</p>
                         <label for="quantity_input">Qty</label>
-                        <input type="text" name="quantity_input" maxlength="3" value="0">
+                        <input type="text" name="quantity_textbox" maxlength="3" value="0">
     
                     </div>
                 `)

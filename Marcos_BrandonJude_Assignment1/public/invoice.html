@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
-    <script src="./product_data.js"></script>
+    <script src="/product_data.js"></script>
+    <script src="/product_data_quantity.js"></script>
     <link rel="stylesheet" href="./invoice_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,16 +47,16 @@
                 errors = []; // assume no errors at first
                 if (q == "") q == 0;
                 if (Number(q) != q) {
-                    errors.push('Not a number!'); // Check if string is a number value
+                    errors.push("Not a number!"); // Check if string is a number value
                     return true;
                 }
                 else {
                     if (q < 0) {
-                        errors.push('Negative value!'); // Check if it is non-negative
+                        errors.push("Negative value!"); // Check if it is non-negative
                         return true;
                     }
                     if (parseInt(q) != q) {
-                        errors.push('Not an integer!'); // Check that it is an integer
+                        errors.push("Not an integer!"); // Check that it is an integer
                         return true;
                     }
 
@@ -65,29 +66,29 @@
             function generate_item_rows() {
 
                 for (i in products_array) {
-                    if (products_array[i]['quantity_purchased'] == 0) {
+                    if (quantity_arr[i] == 0) {
                         continue;
                     }
-                    if (isNonNegInt(products_array[i]['quantity_purchased']) == true) {
+                    if (isNonNegInt(quantity_arr[i]) == true) { 
                         extended_price = 0;
                         sub_total = sub_total + extended_price;
                         document.write(`
                         <tr>
-                        <td>${products_array[i]['name']}</td>
-                        <td class="unvalid_qty">${products_array[i]['quantity_purchased']}<br>${errors}</td>
-                        <td>$${products_array[i]['price']}</td>
+                        <td>${products_array[i]["name"]}</td>
+                        <td class="unvalid_qty">${quantity_arr[i]}<br>${errors}</td>
+                        <td>$${products_array[i]["price"]}</td>
                         <td>$${eval(extended_price)}</td>
                         </tr>
                         `)
                     }
                     else {
-                        extended_price = products_array[i]['price'] * products_array[i]['quantity_purchased'];
+                        extended_price = products_array[i]["price"] * quantity_arr[i];
                         sub_total = sub_total + extended_price;
                         document.write(`
                         <tr>
-                        <td>${products_array[i]['name']}</td>
-                        <td>${products_array[i]['quantity_purchased']}</td>
-                        <td>$${products_array[i]['price']}</td>
+                        <td>${products_array[i]["name"]}</td>
+                        <td>${quantity_arr[i]}</td>
+                        <td>$${products_array[i]["price"]}</td>
                         <td>$${eval(extended_price)}</td>
                         </tr>
                         `)
