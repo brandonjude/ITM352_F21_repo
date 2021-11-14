@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <script src="/errors_data.js"></script>
+    <script src="/product_data.js"></script>
+    <link rel="stylesheet" href="./qty_error_page_styles.css">
+</head>
+<body>
+
+    <h2>Oops! There is an error with your purhcase :(</h2>
+
+    <h2>Your quantities have the following errors: </h2>
+
+    <script>
+
+
+        for (i in errors){
+            document.write(`
+                <h3> - Your quantity for ${(products_array[error_product_index[i]].name)} is ${errors[i]}</h3>
+            `)
+        }
+
+    </script>
+
+    <br>
+
+    <h3>Click the BACK button to fix your order</h3>
+
+
+</body>
+</html>
