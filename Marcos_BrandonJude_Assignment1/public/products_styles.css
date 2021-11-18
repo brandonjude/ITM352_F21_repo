@@ -36,7 +36,7 @@
     font-size: 120%;
 }
 
-.item_price {
+.item_price, p {
     font-family: 'Montserrat', sans-serif;
     font-size: 90%;
 }

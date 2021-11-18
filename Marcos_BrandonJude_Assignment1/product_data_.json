@@ -2,33 +2,38 @@
 
     {  
         "name":"Watermelon",  
-        "price": 34.00,  
+        "price": 17.00,  
         "image": "./images/watermelon.png",
-        "quantity_available": 5
+        "weight": 320,
+        "quantity_available": 90
     }, 
     {  
         "name":"Mangosteen",  
-        "price": 27.00,  
+        "price": 14.00,  
         "image": "./images/mangosteen.png",
-        "quantity_available": 3
+        "weight": 7,
+        "quantity_available": 65
     }, 
     {  
         "name":"Lemon",  
-        "price": 19.00,  
+        "price": 4.00,  
         "image": "./images/lemon.png",
-        "quantity_available": 9
+        "weight": 3.5,
+        "quantity_available": 95
     }, 
     {  
         "name":"Dragon Fruit",  
-        "price": 71.00,  
+        "price": 11.00,  
         "image": "./images/dragonfruit.png",
-        "quantity_available": 3
+        "weight": 15,
+        "quantity_available": 60
     }, 
     {  
         "name":"Cherry",  
-        "price": 5.00,  
+        "price": 1,  
         "image": "./images/cherry.png",
-        "quantity_available": 8
+        "weight": 0.5,
+        "quantity_available": 125
     }
 
 ]

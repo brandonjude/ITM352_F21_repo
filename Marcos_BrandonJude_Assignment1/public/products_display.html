@@ -13,6 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
+<style>
+    html, body {
+        background-image: linear-gradient(to top, #92c8fa , white);
+        height: 100%;
+    }
+</style>
+
+<script>
+    //when the page loads, check the URL for existence of paramters
+    window.onload = function () {
+        let params = (new URL(document.location)).searchParams;
+        //if the alert parameter exists, load an alert on the client browser
+        if (params.has("alert_error")){
+            alert(params.get("alert_error"));
+        }
+    }
+</script>
+
+
 <body>
 
     <div class="header_container"><h1>Brandon's Premium Fruit Store</h1></div>
@@ -27,6 +46,7 @@
         <div class="item_container">
         
             <script>
+                //iterate through the products_array and load the product information into the order page
                 for (i in products_array) {
                     document.write(`
                     <div class="item">
@@ -35,6 +55,7 @@
                         <p class="item_price">Price: $${products_array[i].price}</p>
                         <label for="quantity_input">Qty</label>
                         <input type="text" name="quantity_textbox" maxlength="3" value="0">
+                        <p>In stock: ${products_array[i].quantity_available}</p>
     
     
                     </div>

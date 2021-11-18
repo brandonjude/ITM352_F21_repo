@@ -14,6 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
+<style>
+    html, body {
+        background-image: linear-gradient(to top, #92c8fa , white);
+        height: 100%;
+    }
+</style>
+
 <body>
 
     <h2>
@@ -37,11 +44,18 @@
             <th>
                 Extended Price
             </th>
+            <th>
+                Weight (oz)
+            </th>
         </thead>
 
         <script>
-            sub_total = 0;
 
+            //initialize the subtotal and total weight to 0
+            sub_total = 0;
+            total_weight = 0;
+
+            //function to validate that the quantities are positive whole numbers
             function isNonNegInt(q) {
 
                 errors = []; // assume no errors at first
@@ -63,59 +77,66 @@
                 }
             }
 
+            //create the rows of product data for purchased products
             function generate_item_rows() {
 
                 for (i in products_array) {
+                    //if the quantity provided is 0, then continue. Do not create an invoice row
                     if (quantity_arr[i] == 0) {
                         continue;
                     }
                     if (isNonNegInt(quantity_arr[i]) == true) { 
                         extended_price = 0;
+                        extended_weight = 0;
                         sub_total = sub_total + extended_price;
                         document.write(`
                         <tr>
                         <td>${products_array[i]["name"]}</td>
                         <td class="unvalid_qty">${quantity_arr[i]}<br>${errors}</td>
                         <td>$${products_array[i]["price"]}</td>
-                        <td>$${eval(extended_price)}</td>
+                        <td>$${eval(extended_price).toFixed(2)}</td>
+                        <td>${eval(extended_weight).toFixed(2)}</td>
                         </tr>
                         `)
                     }
                     else {
+                        //calculate extended price by multiplying its price and quantity
                         extended_price = products_array[i]["price"] * quantity_arr[i];
+                        //calculate extended weight by multiplying it quantity and weight
+                        extended_weight = quantity_arr[i] * products_array[i]["weight"];
+                        //add the new extended price to the existing subtotal 
                         sub_total = sub_total + extended_price;
+                        total_weight = total_weight + extended_weight
                         document.write(`
                         <tr>
                         <td>${products_array[i]["name"]}</td>
                         <td>${quantity_arr[i]}</td>
                         <td>$${products_array[i]["price"]}</td>
-                        <td>$${eval(extended_price)}</td>
+                        <td>$${eval(extended_price).toFixed(2)}</td>
+                        <td>${eval(extended_weight).toFixed(2)}</td>
                         </tr>
                         `)
                     }
                 }
             }
-
+            //execute the function to build the rows for invoice
             generate_item_rows();
 
 
             //compute tax
-            var tax = sub_total * 0.0575;
+            var tax = sub_total * 0.045;
 
-            // compute shipping
+            // initialize shipping cost variable
             var shipping;
 
-            // A subtotal $0 - $49.99 will be $2 shipping
-            if (sub_total < 50) {
-                shipping = 2;
+            // A total weight 1 lb or less will be $7 shipping
+            if (total_weight <= 16) {
+                shipping = 7;
 
-                // A subtotal $50 - $99.99 will be $5 shipping
-            } else if (sub_total < 100) {
-                shipping = 5;
-
-                // Subtotals over $100 will be charged 5% of the subtotal amount 
+            // A total weight greater than 1 pound will be charged an additional
+            // 30 cents for each pound added
             } else {
-                shipping = sub_total * .05;
+                shipping = (((total_weight - 16)/16) * 0.40) + 7;
             }
 
             //compute total 
@@ -131,11 +152,15 @@
                     </tr>
                     <tr>
                     <td>Sub-total</td>
-                    <td>$${sub_total}</td>
+                    <td>$${sub_total.toFixed(2)}</td>
                     </tr>
                     <tr>
-                    <td><span>Tax @ 5.75%</span></td>
+                    <td><span>Tax @ 4.5%</span></td>
                     <td>$${tax.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                    <td>Total Weight (oz)</td>
+                    <td>${total_weight.toFixed(2)}</td>
                     </tr>
                     <tr>
                     <td>Shipping</td>
@@ -155,7 +180,9 @@
     </table>
 
 
+<br>
 
+<p>Shipping Policy<br>  - orders 1 pound (16 oz) or less: $7<br>    - and 30&#162; for each additional pound (16 oz) </p>
 
 </body>
 
