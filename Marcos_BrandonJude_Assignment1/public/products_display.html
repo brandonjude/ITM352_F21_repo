@@ -13,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
+<!-- This file will load the order page with product data and prices -->
+
 <style>
     html, body {
         background-image: linear-gradient(to top, #92c8fa , white);
@@ -44,6 +46,8 @@
     <br>
     <form action="./invoice" name="purchase_form" method="post">
         <div class="item_container">
+
+            <!-- Iterate through each product from the JSON products file and create its section on the order page -->
         
             <script>
                 //iterate through the products_array and load the product information into the order page
@@ -74,5 +78,3 @@
 </body>
 
 </html>
-
-<script>console.log(products_array[2].quantity_purchased)</script>

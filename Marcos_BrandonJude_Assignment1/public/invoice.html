@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
+<!-- This file will generate the invoice of an order -->
+
 <style>
     html, body {
         background-image: linear-gradient(to top, #92c8fa , white);
@@ -24,7 +26,7 @@
 <body>
 
     <h2>
-        Thank you for shopping at Brandon's
+        Thank you for shopping at Brandon's Premium Fruit Store
     </h2>
     <br>
     <br>
@@ -45,7 +47,7 @@
                 Extended Price
             </th>
             <th>
-                Weight (oz)
+                Weight (lbs)
             </th>
         </thead>
 
@@ -55,28 +57,6 @@
             sub_total = 0;
             total_weight = 0;
 
-            //function to validate that the quantities are positive whole numbers
-            function isNonNegInt(q) {
-
-                errors = []; // assume no errors at first
-                if (q == "") q == 0;
-                if (Number(q) != q) {
-                    errors.push("Not a number!"); // Check if string is a number value
-                    return true;
-                }
-                else {
-                    if (q < 0) {
-                        errors.push("Negative value!"); // Check if it is non-negative
-                        return true;
-                    }
-                    if (parseInt(q) != q) {
-                        errors.push("Not an integer!"); // Check that it is an integer
-                        return true;
-                    }
-
-                }
-            }
-
             //create the rows of product data for purchased products
             function generate_item_rows() {
 
@@ -85,25 +65,12 @@
                     if (quantity_arr[i] == 0) {
                         continue;
                     }
-                    if (isNonNegInt(quantity_arr[i]) == true) { 
-                        extended_price = 0;
-                        extended_weight = 0;
-                        sub_total = sub_total + extended_price;
-                        document.write(`
-                        <tr>
-                        <td>${products_array[i]["name"]}</td>
-                        <td class="unvalid_qty">${quantity_arr[i]}<br>${errors}</td>
-                        <td>$${products_array[i]["price"]}</td>
-                        <td>$${eval(extended_price).toFixed(2)}</td>
-                        <td>${eval(extended_weight).toFixed(2)}</td>
-                        </tr>
-                        `)
-                    }
                     else {
                         //calculate extended price by multiplying its price and quantity
                         extended_price = products_array[i]["price"] * quantity_arr[i];
-                        //calculate extended weight by multiplying it quantity and weight
-                        extended_weight = quantity_arr[i] * products_array[i]["weight"];
+                        //calculate extended weight by multiplying it quantity and weight and 
+                        //dividing by 16 to get the weight in pounds
+                        extended_weight = (quantity_arr[i] * products_array[i]["weight"])/16;
                         //add the new extended price to the existing subtotal 
                         sub_total = sub_total + extended_price;
                         total_weight = total_weight + extended_weight
@@ -130,13 +97,13 @@
             var shipping;
 
             // A total weight 1 lb or less will be $7 shipping
-            if (total_weight <= 16) {
+            if (total_weight <= 1) {
                 shipping = 7;
 
             // A total weight greater than 1 pound will be charged an additional
             // 30 cents for each pound added
             } else {
-                shipping = (((total_weight - 16)/16) * 0.40) + 7;
+                shipping = ((total_weight - 1) * 0.40) + 7;
             }
 
             //compute total 
@@ -159,8 +126,8 @@
                     <td>$${tax.toFixed(2)}</td>
                     </tr>
                     <tr>
-                    <td>Total Weight (oz)</td>
-                    <td>${total_weight.toFixed(2)}</td>
+                    <td>Total Weight (lbs)</td>
+                    <td>${(total_weight).toFixed(2)}</td>
                     </tr>
                     <tr>
                     <td>Shipping</td>
@@ -182,7 +149,7 @@
 
 <br>
 
-<p>Shipping Policy<br>  - orders 1 pound (16 oz) or less: $7<br>    - and 30&#162; for each additional pound (16 oz) </p>
+<p>Shipping Policy<br>  - orders 1 pound or less: $7<br>    - and 30&#162; for each additional pound </p>
 
 </body>
 

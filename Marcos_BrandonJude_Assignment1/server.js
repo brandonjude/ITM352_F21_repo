@@ -79,6 +79,7 @@ app.post('/invoice', function (req, res, next){
     //iterate through the quantities received from the POST
     for (i in quantity_arr) {  
         //check each value in the quantity in the array is valid
+        //quantity validation 
        isNonNegInt(quantity_arr[i]);
         // add each quantity to the sum of quantities 
        sum_product_qty += parseInt(quantity_arr[i]);
