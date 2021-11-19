@@ -123,12 +123,22 @@ app.post('/invoice', function (req, res, next){
     }
 
     else {
+
+        //remove the purchased quantity from the inventory
+        //update with the new quantity available for products 
+        for (i in products_array) {
+            products_array[i].quantity_available -= Number(quantity_arr[i]);
+        }
         //if at least 1 product is selected and all quantites are valid, send to invoice.html
         res.sendFile(__dirname + '/public/invoice.html');
     }
   
     console.log(errors);
-    //console.log(error_product_index);
+    
+    //console.log() the new quantity available for each product
+    for (i in products_array){
+        console.log(`New quantity for ${products_array[i].name} is ${products_array[i].quantity_available}`)
+    }
 
 });
 
