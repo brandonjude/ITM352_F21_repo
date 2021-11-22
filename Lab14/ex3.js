@@ -39,7 +39,7 @@ app.post("/login", function (request, response) {
     // Process login form POST and redirect to logged in page if ok, back to login page if not
     let login_username = request.body['username'];
     let login_password = request.body['password'];
-    //heck if usernane exists, then check if password entered matches password stored
+    //check if usernane exists, then check if password entered matches password stored
     if(typeof user_reg_info[login_username] != 'undefined'){
         if (user_reg_info[login_username]['password'] == login_password){
             response.send(`${login_username} is logged in`)
