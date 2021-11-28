@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./login_styles.css">
+
+</head>
+
+<script>
+    //when the page loads, check the URL for existence of paramters
+    window.onload = function () {
+        let params = (new URL(document.location)).searchParams;
+
+    if (params.has("user_fullname")){
+        document.getElementById('new_full_name').value = params.get("user_fullname");
+    }
+    if (params.has("user_email")){
+        document.getElementById('new_email').value = params.get("user_email");
+    }
+    if (params.has("errors")){
+        for (let i in user_register_form.elements){
+            user_register_form.elements[i].value = params.get(user_register_form.elements[i].name);
+            checkPassword(document.getElementById("new_password"));
+            checkRepeatPassword(document.getElementById("repeat_new_password"));
+            document.getElementById('new_password').className = "highlight";
+            document.getElementById('new_password').value = "";
+            document.getElementById('repeat_new_password').value = "";
+            document.getElementById('repeat_new_password').disabled = true;
+            checkEmail(document.getElementById("new_email"));
+            checkFullName(document.getElementById("new_full_name"));
+        }
+    }
+    if (params.has("user_exists")) { 
+            document.getElementById('new_username_span').innerHTML = "User already exists!";
+            document.getElementById('new_username').className = "highlight";
+            document.getElementById('new_username').value = params.get("new_username");
+            document.getElementById('new_username').onclick = function () { document.getElementById('new_username').className = ""; };
+    }
+}
+</script>
+
+
+
+<script>
+
+
+    function validateForm() {
+        var inputs = document.getElementsByTagName('input');
+
+
+        for (var x = 0; x < inputs.length; x++) {
+            if (inputs[x].value == "" || inputs[x].className == 'highlight') {
+                return false;
+                break
+            }
+
+        }
+
+    }
+
+
+        function checkUsername(entry) {
+
+
+            var illegal_char = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]+/;
+
+            if (illegal_char.test(entry.value) == true) {
+                document.getElementById('new_username_span').innerHTML = "No special characters or spaces!";
+                document.getElementById('new_username').className = "highlight";
+
+
+            } else {
+                if (entry.value.length < 4) {
+                    document.getElementById('new_username_span').innerHTML = "Username too short!";
+                    document.getElementById('new_username').className = "highlight";
+
+
+                }
+                if (entry.value.length > 10) {
+                    document.getElementById('new_username_span').innerHTML = "Username too long!";
+                    document.getElementById('new_username').className = "highlight";
+
+
+                }
+                if (entry.value.length >= 4 && entry.value.length <= 10) {
+                    document.getElementById('new_username_span').innerHTML = "";
+                    document.getElementById('new_username').className = "";
+
+                }
+
+
+            }
+
+
+        }
+
+
+
+        function checkPassword(entry) {
+
+
+            if (entry.value.length < 6) {
+                document.getElementById('new_password_span').innerHTML = "Include more than 6 characters!";
+                document.getElementById('new_password').className = "highlight";
+                document.getElementById('repeat_new_password').value = "";
+                document.getElementById('repeat_new_password').disabled = true;
+
+            } else {
+                document.getElementById('new_password_span').innerHTML = "";
+                document.getElementById('new_password').className = "";
+                document.getElementById('repeat_new_password').disabled = false;
+
+            }
+        }
+
+        function checkRepeatPassword(entry) {
+
+
+            if (document.getElementById('new_password').value != entry.value) {
+                document.getElementById('new_password_span').innerHTML = "Passwords do not match!";
+                document.getElementById('repeat_new_password').className = "highlight";
+
+            } else {
+                document.getElementById('new_password_span').innerHTML = "";
+                document.getElementById('repeat_new_password').className = "";
+
+            }
+        }
+
+        function checkEmail(entry) {
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(entry.value) == false) {
+                document.getElementById('new_email_span').innerHTML = "Enter valid email!";
+                document.getElementById('new_email').className = "highlight";
+
+            } else {
+                document.getElementById('new_email_span').innerHTML = "";
+                document.getElementById('new_email').className = "";
+
+            }
+        }
+
+        function checkFullName(entry) {
+
+            var illegal_char = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            var number_char = /\d/;
+
+            if (illegal_char.test(entry.value) == true || number_char.test(entry.value) == true) {
+                document.getElementById('new_fullname_span').innerHTML = "No numbers or special characters!";
+                document.getElementById('new_full_name').className = "highlight";
+
+            } else {
+                document.getElementById('new_fullname_span').innerHTML = "";
+                document.getElementById('new_full_name').className = "";
+
+
+
+            }
+        }
+
+
+
+
+</script>
+
+
+<body>
+
+    <div class="register_form">
+
+        <form name="user_register_form" action="/try_register" method="post" onsubmit="return validateForm()">
+            <h2>Create Account</h2>
+            <br>
+            <br>
+            <input type="text" name="new_username" id="new_username" placeholder="Username"
+                onkeyup="checkUsername(this)">
+            <p id="new_username_span"></p>
+            <br>
+            <input type="password" name="new_password" id="new_password" placeholder="Password"
+                onkeyup="checkPassword(this)">
+            <br>
+            <input type="password" name="repeat_new_password" id="repeat_new_password" placeholder="Confirm Password"
+                onkeyup="checkRepeatPassword(this)" disabled='true'>
+            <p id="new_password_span"></p>
+            <br>
+            <input type="text" name="new_email" id="new_email" placeholder="Email" onkeyup="checkEmail(this)">
+            <p id="new_email_span"></p>
+            <br>
+            <input type="text" name="new_full_name" id="new_full_name" placeholder="Full Name"
+                onkeyup="checkFullName(this)">
+            <p id="new_fullname_span"></p>
+            <br>
+            <input type="submit" name="submit_button" id="submit_button" value="Register">
+
+
+        </form>
+
+
+
+    </div>
+
+</body>
+
+</html>

@@ -15,24 +15,53 @@
     <link rel="stylesheet" href="./login_styles.css">
 
 </head>
+
+
+<script>
+    //when the page loads, check the URL for existence of paramters
+    window.onload = function () {
+        let params = (new URL(document.location)).searchParams;
+        //if the alert parameter exists, load an alert on the client browser
+        if (params.has("non_existent_user")){
+            document.getElementById('username_span').innerHTML = 'User does not exist';
+            document.getElementById('username').value = params.get('non_existent_user');
+            document.getElementById('username').className = 'highlight';
+            //alert(params.get("alert_error"));
+        } else if (params.has("wrong_password")) {
+            document.getElementById('password_span').innerHTML = 'Incorrect password';
+            document.getElementById('username').value = params.get('wrong_password');
+            document.getElementById('password').className = 'highlight';
+            // document.getElementById('username').innerHTML = *variable that stored username* ;
+
+
+            //alert(params.get("alert_error"));
+        } else if (params.has("registration_successful")){
+            document.getElementById('registration_completed').innerHTML = "Registration successful! Sign in below.";
+        }
+    }
+</script>
+
+
+
+
 <body>
 
 <div class="login_form">
 
-    <form action="" method="post">
+    <form action="/try_login" method="post">
         <h2>Sign In</h2>
         <br>
+        <p id="registration_completed"></p>
         <br>
         <input type="text" name="username" id="username" placeholder="Username">
-        <br>
-        <br>
+        <p id="username_span"></p>
         <br>
         <input type="password" name="password" id="password" placeholder="Password">
-        <br>
+        <p id="password_span"></p>
         <br>
         <input type="submit" name="submit_button" id="submit_button" value="Login"> 
         <br>
-        <input type="button" name="go_to_register" id="go_to_register" value="Register">
+        <input type="button" name="go_to_register" id="go_to_register" value="Register" onclick="location.href = './register.html';">
 
     </form>
    

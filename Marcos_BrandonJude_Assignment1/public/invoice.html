@@ -8,6 +8,7 @@
     <title>Invoice</title>
     <script src="/product_data.js"></script>
     <script src="/product_data_quantity.js"></script>
+    <script src="/customer_info.js"></script>
     <link rel="stylesheet" href="./invoice_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,11 @@
     </h2>
     <br>
     <br>
+    <p>Hello, <strong><script>document.write(`${customer_name}`)</script></strong>. Thank you for your order.</p>
+    <p>A confirmation will be sent to <strong><script>document.write(`${customer_email}`)</script></strong> shortly.</p>
 
+    <br>
+    <br>
 
     <table>
         <thead>

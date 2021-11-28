@@ -29,6 +29,6 @@ tr {
     color: rgb(249, 59, 59);
 }
 
-p {
+p, h3 {
     font-family: 'Montserrat', sans-serif;
 }
