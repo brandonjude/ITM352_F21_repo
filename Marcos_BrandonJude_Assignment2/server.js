@@ -42,12 +42,14 @@ else {
 }
 
 
+
 //route for post requests to try_login, route requested when login page submitted
 app.post("/try_login", function (request, response, next) {
     //pull the username and password from the request body of login page
     user_username = request.body[`username`].toLowerCase(); //set the username to all lowercase letters, case insensitive username
     user_password = request.body[`password`]; //password remains case sensitive
 
+    //validation code taken from Lab 14
     //if the username does not exits in the user_data.json file
     if (user_reg_info[user_username] == undefined) {
         //redirect back to login page an alert user does not exits
@@ -68,6 +70,8 @@ app.post("/try_login", function (request, response, next) {
     }
 });
 
+
+
 //route for get request for customer_info.js, requested by invoice page to personalize page for current user
 app.get("/customer_info.js", function (request, response, next) {
     response.type('.js');
@@ -75,6 +79,8 @@ app.get("/customer_info.js", function (request, response, next) {
     var customer_info = `var customer_name = ${JSON.stringify(user_reg_info[user_username].name)}; var customer_email = ${JSON.stringify(user_reg_info[user_username].email)}`;
     response.send(customer_info);
 });
+
+
 
 //route for post request for try_register, requested by registration page 
 app.post("/try_register", function (request, response, next) {
@@ -89,11 +95,13 @@ app.post("/try_register", function (request, response, next) {
     //initialize an errors object with 0 errors
     var errors = {};
     //regex to check for illegal characters
+    // regex found https://stackoverflow.com/questions/56532904/what-is-the-regex-for-finding-special-characters-and-whitespace-at-the-beginning
     var illegal_char = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]+/;
     var illegal_char_name = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
     //regex to check for numbers 
+    // regex found at https://dev.to/melvin2016/how-to-check-if-a-string-contains-at-least-one-number-using-regular-expression-regex-in-javascript-3n5h
     var number_char = /\d/;
-
+    //begin secondary validation of registration information
     //if the registration username has special characters, is less than 4 characters, or greater than 10 characters
     if (illegal_char.test(new_user_username) == true || new_user_username.length < 4 || new_user_username.length > 10) {
         //push a username error into the errors object
@@ -120,6 +128,7 @@ app.post("/try_register", function (request, response, next) {
         errors['repeat_password_error'] = 'repeat_password_error';
     }
     //if email does not follow structure determined by the regex
+    // regex found at https://www.w3resource.com/javascript/form/email-validation.php
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(new_user_email) == false) {
         errors['email_error'] = 'email_error';
     }
@@ -145,6 +154,7 @@ app.post("/try_register", function (request, response, next) {
         user_reg_info[new_user_username].email = new_user_email;
         user_reg_info[new_user_username].name = new_user_fullname;
 
+        //writing to user_data.json file code taken from Lab 14
         //stringify the existing data and new data that was added to the user_data object
         new_data = JSON.stringify(user_reg_info);
         //re-write the data the user_data.json file
@@ -167,6 +177,7 @@ app.get("/product_data.js", function (request, response, next) {
 });
 
 
+
 //route for GET requests for /product_data_quantity.js
 app.get("/product_data_quantity.js", function (request, response, next) {
     response.type('.js');
@@ -177,6 +188,7 @@ app.get("/product_data_quantity.js", function (request, response, next) {
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
+
 
 
 //route for a POST request to /invoice, /invoice is action of order submit button
@@ -219,7 +231,6 @@ app.post('/pre_invoice', function (req, res, next) {
         //if q is a valid, whole positive integer, return true
         return true;
     }
-
 
     //declare global for the sum of all products purchased
     sum_product_qty = 0;
@@ -293,6 +304,7 @@ app.post('/pre_invoice', function (req, res, next) {
 
 
 
+
 //route for GET requests to /errors_data.js
 app.get("/errors_data.js", function (request, response, next) {
     response.type('.js');
@@ -301,6 +313,8 @@ app.get("/errors_data.js", function (request, response, next) {
     console.log(`Invalid quantities: ${error_str}`);
     response.send(error_str);
 });
+
+
 
 //route to check for get requests to invoice.html file
 app.get("/invoice.html", function (request, response, next) {
