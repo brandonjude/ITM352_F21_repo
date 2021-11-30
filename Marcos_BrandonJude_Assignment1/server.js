@@ -1,8 +1,9 @@
-//Express server 
+//Express server for website
 //Brandon Jude Marcos
 
 //load the express module 
 var express = require('express');
+
 //assign the express method to the app variable
 var app = express();
 
@@ -313,5 +314,6 @@ app.get("/invoice.html", function (request, response, next) {
 
 //default route into the ./public directory for any route that was not previously specified
 app.use(express.static('./public'));
+
 //listen for requests on port 8080
 app.listen(8080, () => console.log(`Listening on port 8080`)); // note the use of an anonymous function here to do a callback

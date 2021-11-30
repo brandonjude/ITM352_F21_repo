@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
 
-
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
@@ -16,25 +14,35 @@
 
 </head>
 
+<!-- This is the login page for the website.
+     User is instructed to sign in with their username and password.
+     If server detects non-existent username or incorrect password, 
+     user is redirected back to login page. -->
 
 <script>
-    //when the page loads, check the URL for existence of paramters
+    //when the page loads, run the following function 
     window.onload = function () {
+        // check the URL for existence of paramters, assign the query string to varaible params
         let params = (new URL(document.location)).searchParams;
-        //if the alert parameter exists, load an alert on the client browser
+        //if the non_existent_user parameter exists
         if (params.has("non_existent_user")){
+            //alert user that the username does not exist
             document.getElementById('username_span').innerHTML = 'User does not exist';
+            //grab username from params and place back into input textbox
             document.getElementById('username').value = params.get('non_existent_user');
+            //change the class name to 'highlight' 
             document.getElementById('username').className = 'highlight';
-            //alert(params.get("alert_error"));
+        // else if user does exist, but has wrong_password parameter
         } else if (params.has("wrong_password")) {
+            //alert user of incorrect password
             document.getElementById('password_span').innerHTML = 'Incorrect password';
+            ////grab username from params and place back into input textbox
             document.getElementById('username').value = params.get('wrong_password');
+            //change class name to highlight 
             document.getElementById('password').className = 'highlight';
-            // document.getElementById('username').innerHTML = *variable that stored username* ;
-
-
-            //alert(params.get("alert_error"));
+        
+        //if the user registers, they will be redirected to this login page with parameter 'registration_successful'
+        //if that parameter exists, then alert user of successful registration and ask to sign in 
         } else if (params.has("registration_successful")){
             document.getElementById('registration_completed').innerHTML = "Registration successful! Sign in below.";
         }

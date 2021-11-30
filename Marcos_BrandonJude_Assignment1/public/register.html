@@ -16,16 +16,21 @@
 </head>
 
 <script>
-    //when the page loads, check the URL for existence of paramters
+    //when the page loads, run the following function 
     window.onload = function () {
+        // check the URL for existence of paramters, assign the query string to varaible params
         let params = (new URL(document.location)).searchParams;
-
+    //if params has a key user_fullname
     if (params.has("user_fullname")){
+        //grab username from params and place back into input textbox
         document.getElementById('new_full_name').value = params.get("user_fullname");
     }
+    //if params has a key user_email
     if (params.has("user_email")){
+        //grab email from params and place back into input textbox
         document.getElementById('new_email').value = params.get("user_email");
     }
+    //if params has a key errors
     if (params.has("errors")){
         for (let i in user_register_form.elements){
             user_register_form.elements[i].value = params.get(user_register_form.elements[i].name);
@@ -43,30 +48,23 @@
             document.getElementById('new_username_span').innerHTML = "User already exists!";
             document.getElementById('new_username').className = "highlight";
             document.getElementById('new_username').value = params.get("new_username");
-            document.getElementById('new_username').onclick = function () { document.getElementById('new_username').className = ""; };
+            // document.getElementById('new_username').onclick = function () { document.getElementById('new_username').className = ""; };
     }
 }
 </script>
 
-
-
 <script>
-
 
     function validateForm() {
         var inputs = document.getElementsByTagName('input');
-
 
         for (var x = 0; x < inputs.length; x++) {
             if (inputs[x].value == "" || inputs[x].className == 'highlight') {
                 return false;
                 break
             }
-
         }
-
     }
-
 
         function checkUsername(entry) {
 
@@ -94,19 +92,11 @@
                 if (entry.value.length >= 4 && entry.value.length <= 10) {
                     document.getElementById('new_username_span').innerHTML = "";
                     document.getElementById('new_username').className = "";
-
                 }
-
-
             }
-
-
         }
 
-
-
         function checkPassword(entry) {
-
 
             if (entry.value.length < 6) {
                 document.getElementById('new_password_span').innerHTML = "Include more than 6 characters!";
@@ -118,12 +108,10 @@
                 document.getElementById('new_password_span').innerHTML = "";
                 document.getElementById('new_password').className = "";
                 document.getElementById('repeat_new_password').disabled = false;
-
             }
         }
 
         function checkRepeatPassword(entry) {
-
 
             if (document.getElementById('new_password').value != entry.value) {
                 document.getElementById('new_password_span').innerHTML = "Passwords do not match!";
@@ -132,7 +120,6 @@
             } else {
                 document.getElementById('new_password_span').innerHTML = "";
                 document.getElementById('repeat_new_password').className = "";
-
             }
         }
 
@@ -144,7 +131,6 @@
             } else {
                 document.getElementById('new_email_span').innerHTML = "";
                 document.getElementById('new_email').className = "";
-
             }
         }
 
@@ -160,14 +146,8 @@
             } else {
                 document.getElementById('new_fullname_span').innerHTML = "";
                 document.getElementById('new_full_name').className = "";
-
-
-
             }
         }
-
-
-
 
 </script>
 
@@ -202,8 +182,6 @@
 
 
         </form>
-
-
 
     </div>
 
