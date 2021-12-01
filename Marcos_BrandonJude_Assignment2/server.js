@@ -25,6 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json())
 
+//initialize the current user to none 
+current_user = '';
+current_user_email = '';
+
 //route for all methods and paths
 app.all('*', function (request, response, next) {
     console.log(request.method + ' to path ' + request.path + " query " + JSON.stringify(request.body[`quantity_textbox`]));
@@ -40,7 +44,6 @@ if (fs.existsSync(user_data_file)) {
 else {
     console.log(`${filename} does not exist`);
 }
-
 
 
 //route for post requests to try_login, route requested when login page submitted
@@ -64,20 +67,12 @@ app.post("/try_login", function (request, response, next) {
         } else if (user_reg_info[user_username].password == user_password) {
             //set the state of user logged in to true
             user_logged_in = true;
+            current_user = JSON.stringify(user_reg_info[user_username].name);
+            current_user_email = JSON.stringify(user_reg_info[user_username].email);
             //redirect to the invoice.html
             response.redirect(`./invoice.html`);
         }
     }
-});
-
-
-
-//route for get request for customer_info.js, requested by invoice page to personalize page for current user
-app.get("/customer_info.js", function (request, response, next) {
-    response.type('.js');
-    //take the current username and corresponding email and save to variables that can be accessed by invoice page
-    var customer_info = `var customer_name = ${JSON.stringify(user_reg_info[user_username].name)}; var customer_email = ${JSON.stringify(user_reg_info[user_username].email)}`;
-    response.send(customer_info);
 });
 
 
@@ -159,10 +154,25 @@ app.post("/try_register", function (request, response, next) {
         new_data = JSON.stringify(user_reg_info);
         //re-write the data the user_data.json file
         fs.writeFileSync('./user_data.json', new_data);
-        //redirect to the login page with a paramter to alert a registration
-        response.redirect('./login.html?registration_successful');
+        
+        //if registration is successful, user is considered to be logged in
+        user_logged_in = true;
+
+        current_user = JSON.stringify(user_reg_info[new_user_username].name);
+        current_user_email = JSON.stringify(user_reg_info[new_user_username].email);
+        //redirect to the invoice page with a paramter to alert a registration
+        response.redirect('./invoice.html?user_registered');
     }
 
+});
+
+
+//route for get request for customer_info.js, requested by invoice page to personalize page for current user
+app.get("/customer_info.js", function (request, response, next) {
+    response.type('.js');
+    //take the current username and corresponding email and save to variables that can be accessed by invoice page
+    var customer_info = `var customer_name = ${current_user}; var customer_email = ${current_user_email}`;
+    response.send(customer_info);
 });
 
 
