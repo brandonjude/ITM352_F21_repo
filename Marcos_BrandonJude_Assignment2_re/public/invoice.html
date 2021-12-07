@@ -18,8 +18,9 @@
 <!-- This file will generate the invoice of an order -->
 
 <style>
-    html, body {
-        background-image: linear-gradient(to top, #92c8fa , white);
+    html,
+    body {
+        background-image: linear-gradient(to top, #92c8fa, white);
         height: 100%;
     }
 </style>
@@ -31,8 +32,12 @@
     </h2>
     <br>
     <br>
-    <p>Hello, <strong><script>document.write(`${customer_name}`)</script></strong>. Thank you for your order.</p>
-    <p>A confirmation will be sent to <strong><script>document.write(`${customer_email}`)</script></strong> shortly.</p>
+    <p>Hello, <strong>
+            <script>document.write(`${customer_name}`)</script>
+        </strong>. Thank you for your order.</p>
+    <p>A confirmation will be sent to <strong>
+            <script>document.write(`${customer_email}`)</script>
+        </strong> shortly.</p>
 
     <br>
     <br>
@@ -64,30 +69,32 @@
 
             //create the rows of product data for purchased products
             function generate_item_rows() {
-
-                for (i in products_array) {
-                    //if the quantity provided is 0, then continue. Do not create an invoice row
-                    if (quantity_arr[i] == 0) {
-                        continue;
-                    }
-                    else {
-                        //calculate extended price by multiplying its price and quantity
-                        extended_price = products_array[i]["price"] * quantity_arr[i];
-                        //calculate extended weight by multiplying it quantity and weight and 
-                        //dividing by 16 to get the weight in pounds
-                        extended_weight = (quantity_arr[i] * products_array[i]["weight"])/16;
-                        //add the new extended price to the existing subtotal 
-                        sub_total = sub_total + extended_price;
-                        total_weight = total_weight + extended_weight
-                        document.write(`
+                for (pkey in cart_data) {
+                    for (i in cart_data[pkey]) {
+                        let q = cart_data[pkey][i]
+                        //if the quantity provided is 0, then continue. Do not create an invoice row
+                        if (q == 0) {
+                            continue;
+                        }
+                        else {
+                            //calculate extended price by multiplying its price and quantity
+                            extended_price = products_array[pkey][i]["price"] * q;
+                            //calculate extended weight by multiplying it quantity and weight and 
+                            //dividing by 16 to get the weight in pounds
+                            extended_weight = (q * products_array[pkey][i]["weight"]) / 16;
+                            //add the new extended price to the existing subtotal 
+                            sub_total = sub_total + extended_price;
+                            total_weight = total_weight + extended_weight
+                            document.write(`
                         <tr>
-                        <td>${products_array[i]["name"]}</td>
-                        <td>${quantity_arr[i]}</td>
-                        <td>$${products_array[i]["price"]}</td>
+                        <td>${products_array[pkey][i]["name"]}</td>
+                        <td>${q}</td>
+                        <td>$${products_array[pkey][i]["price"]}</td>
                         <td>$${eval(extended_price).toFixed(2)}</td>
                         <td>${eval(extended_weight).toFixed(2)}</td>
                         </tr>
                         `)
+                        }
                     }
                 }
             }
@@ -105,8 +112,8 @@
             if (total_weight <= 1) {
                 shipping = 7;
 
-            // A total weight greater than 1 pound will be charged an additional
-            // 30 cents for each pound added
+                // A total weight greater than 1 pound will be charged an additional
+                // 30 cents for each pound added
             } else {
                 shipping = ((total_weight - 1) * 0.40) + 7;
             }
@@ -152,9 +159,9 @@
     </table>
 
 
-<br>
+    <br>
 
-<p>Shipping Policy<br>  - orders 1 pound or less: $7<br>    - and 30&#162; for each additional pound </p>
+    <p>Shipping Policy<br> - orders 1 pound or less: $7<br> - and 30&#162; for each additional pound </p>
 
 </body>
 

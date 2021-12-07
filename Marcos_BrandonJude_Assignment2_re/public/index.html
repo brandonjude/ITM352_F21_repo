@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/product_data.js"></script>
     <link rel="stylesheet" href="./products_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,18 +29,14 @@
     </div>
 
     <!-- Submit button that will redirect to the order page -->
-    <form action="/go_to_store" method="post">
-        <input type="submit" name="Fruits" value="Fruits">
-    </form>
-    <form action="/go_to_store" method="post">
-        <input type="submit" name="Meats" value="Meats">
-    </form>
-    <form action="/go_to_store" method="post">
-        <input type="submit" name="Dairy" value="Dairy">
-    </form>
-    <form action="/go_to_store" method="post">
-        <input type="submit" name="Vegetables" value="Vegetables">
-    </form>
+
+    <script>
+        for (pkey in products_array){
+            document.write(`<input type="button" name="${pkey}" value="${pkey}" onclick="window.location = './products_display.html?product_type=${pkey}'">`);
+        }
+    </script>
+    
+        
 
 </body>
 </html>

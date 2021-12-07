@@ -19,6 +19,13 @@ user_logged_in = false;
 //pulling data from product_data_.json and assigning to products_array
 var products_array = require('./product_data_.json')
 
+
+
+var session = require('express-session');
+
+app.use(session({ secret: "MySecretKey", resave: true, saveUninitialized: true }));
+
+
 //parsing incoming request bodies, accessible through request.body
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,49 +50,45 @@ else {
 }
 
 
-//route for posts requests to go_to_store, will be requested by invoice when user selects what item category they want to see
-app.post("/go_to_store", function (request, response, next) {
-    //redirect user to products page based on what product key they selected
-    response.redirect(`./products_display.html?prod_key=${Object.keys(request.body)}`);
-});
-
-
 
 app.post("/add_to_cart", function (request, response, next) {
-    
-    quantity_desired = request.body['quantity_textbox'];
+    console.log(request.body)
 
-    console.log(quantity_desired);
-    console.log(request.body);
-    console.log(Object.keys(request.body));
+    var quantity_desired = request.body['quantity'];
+    var product_key = request.body['product_type'];
 
-    errors = {};
-     // returns false if q is not an whole integer or positive number
-     function isNonNegInt(q) {
 
-        if (q == "") q == 0;
-        if (Number(q) != q) {
-            errors['quantity_error'] = 'Quantity must not be a string!' 
-            return false;
+    var errors = {};
+    //validate quantities 
+    for (i in products_array[product_key]) {
+        let q = quantity_desired[i];
+        if (isNonNegInt(q) == false) {
+            errors[`quantity_${i}`] = `${q} is not a valid quantity`;
         }
-        else if (q < 0) {
-            errors['quantity_error'] = 'Quantity must not be negative!'
-            return false;
-        }
-        else if (parseInt(q) != q) {
-            errors['quantity_error'] = 'Quantity must be a positive integer!'
-            return false;
-        }
-
-        return true;
     }
 
-    if (isNonNegInt(quantity_desired) == false){
-        request.body.errors = JSON.stringify(errors);
-        let params = new URLSearchParams(request.body);
-        response.redirect(`./products_display.html?${params.toString()}&prod_key=${request.body[`product_type`]}`);
+    //if there are no errors, add item to cart
+    if (Object.keys(errors).length == 0) {
+        if (typeof request.session.cart == 'undefined') {
+            request.session.cart = {};
+        }
+        if (typeof request.session.cart[product_key] == 'undefined') {
+            request.session.cart[product_key] = new Array(quantity_desired.length).fill(0);
+        }
+        for (i in request.session.cart[product_key]) {
+            request.session.cart[product_key][i] += Number(quantity_desired[i]);
+
+        }
+
     }
-    
+    console.log('cart data: ', request.session.cart);
+    request.body.errors = JSON.stringify(errors);
+
+    let params = new URLSearchParams(request.body);
+
+    response.redirect(`./products_display.html?${params.toString()}`);
+
+
 });
 
 
@@ -103,13 +106,13 @@ app.post("/try_login", function (request, response, next) {
     if (user_reg_info[user_username] == undefined) {
         //redirect back to login page an alert user does not exits
         response.redirect(`./login.html?non_existent_user=${user_username}`);
-    //else if user does exist within user_data file
+        //else if user does exist within user_data file
     } else if (user_reg_info[user_username] != undefined) {
         //if the password does not match the usernames password key 
         if (user_reg_info[user_username].password != user_password) {
             //redirect back to login page and alert user of incorrect password
             response.redirect(`./login.html?wrong_password=${user_username}`);
-        // else if username and password match
+            // else if username and password match
         } else if (user_reg_info[user_username].password == user_password) {
             //set the state of user logged in to true
             user_logged_in = true;
@@ -232,8 +235,10 @@ app.get("/product_data_quantity.js", function (request, response, next) {
     response.type('.js');
     // quantity_arr = request.body[`quantity_textbox`];
     //allow access to the quantity_arr array object 
-    var products_qty_str = `var quantity_arr = [${quantity_arr}];`;
-    console.log(products_qty_str);
+    if (typeof request.session.cart == 'undefined'){
+        request.session.cart = {};
+    }
+    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)};`;
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
@@ -380,3 +385,22 @@ app.use(express.static('./public'));
 
 //listen for requests on port 8080
 app.listen(8080, () => console.log(`Listening on port 8080`)); // note the use of an anonymous function here to do a callback
+
+
+
+// returns false if q is not an whole integer or positive number
+function isNonNegInt(q) {
+
+    if (q == "") q == 0;
+    if (Number(q) != q) {
+        return false;
+    }
+    else if (q < 0) {
+        return false;
+    }
+    else if (parseInt(q) != q) {
+        return false;
+    }
+
+    return true;
+}

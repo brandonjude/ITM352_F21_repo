@@ -58,8 +58,8 @@
 <script>
 
     let params = (new URL(document.location)).searchParams;
-    if (params.has('prod_key')) {
-        var product_type = params.get('prod_key');
+    if (params.has('product_type')) {
+        var product_type = params.get('product_type');
     } else {
         alert('Must have a product key to display products!');
         window.stop;
@@ -73,32 +73,44 @@
         let params = (new URL(document.location)).searchParams;
         product_form = params.get('product');
         //if the alert parameter exists, load an alert on the client browser
-        if (params.has("alert_error")) {
-            alert(params.get("alert_error"));
-        }
-        else {
-            if (params.has("errors")) {
-                document.getElementsByName(`quantity_textbox_of_${params.get('product_name')}`).value = params.get(`quantity_textbox_of_${params.get('product_name')}`);
-                    console.log(params.get(`errors['quantity_error']`));
-                    alert(params.get(`errors['quantity_error']`));
+
+        if (params.has("errors")) {
+            var errors = JSON.parse(params.get('errors'));
+            if (Object.keys(errors).length == 0) {
+                alert('Items successfully added to cart!');
+            } else {
+                // document.getElementsByName(`quantity_textbox_of_${params.get('product_name')}`).value = params.get(`quantity_textbox_of_${params.get('product_name')}`);
+                let quantities = params.get('quantity').split(',');
+                for (i in quantities){
+                    document.getElementById(`quantity_${i}`).value = quantities[i];
+                    if (typeof errors[`quantity_${i}`] != 'undefined') {
+                        document.getElementById(`error_div_quantity_${i}`).innerHTML = errors[`quantity_${i}`]; 
+                    }
+                    
                 }
+                
+                alert('Could not add to cart. Please fix errors below.');
+                
             }
+
         }
+    }
 
-        function navigationbar() {
 
-            document.write(`
+    function navigationbar() {
+
+        document.write(`
         <div id="nav">
             <ul>`);
 
-            for (p_key in products_array) {
-                document.write(`
-            <li><a href="./products_display.html?prod_key=${p_key}">${p_key}</a></li>
+        for (p_key in products_array) {
+            document.write(`
+            <li><a href="./products_display.html?product_type=${p_key}">${p_key}</a></li>
 
         `);
-            }
+        }
 
-            document.write(`
+        document.write(`
 
         <li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html">Cart</a></li>
         <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
@@ -107,7 +119,7 @@
         </ul>
         `);
 
-        }
+    }
 
 
 
@@ -136,8 +148,9 @@
 
 
     <!-- Iterate through each product from the JSON products file and create its section on the order page -->
+    <form name="product_${i}" action="/add_to_cart" method="post">
 
-    <script>
+        <script>
 
 
             // product_key as a hidden input so server can get products_array quantity
@@ -148,18 +161,20 @@
             for (i = 0; i < products_array[product_type].length; i++) {
                 document.write(`
                     <div class="item">
-                        <form name="product_${i}" action="/add_to_cart" method="post">
+                        
                         <img class="item_image" src="${products_array[product_type][i].image}">
                         <p class="item_name">${products_array[product_type][i].name}</p>
                         <p class="item_price">$${products_array[product_type][i].price}</p>
                         <label for="quantity_input">Qty</label>
-                        <input type="text" value="0" name="quantity_textbox_of_${products_array[product_type][i].name}"></input>
+                        <input type="text" id="quantity_${i}" value="0" name="quantity[${i}]"></input>
+                        <div id="error_div_quantity_${i}">
+                        </div>
                         <p>In Stock: ${products_array[product_type][i].quantity_available}</p>
-                        <input type="hidden" name="product" value="product_${i}">
-                        <input type="hidden" name="product_type" value="${product_type}">
-                        <input type="hidden" name="product_name" value="${products_array[product_type][i].name}">
-                        <input type="submit" name="submit_button" value="Add to Cart">
-                    </form>
+        
+                        
+                    
+                        
+                    
 
                     </div>
                 
@@ -169,8 +184,9 @@
             }
 
 
-    </script>
-
+        </script>
+        <input type="submit" name="submit_button" value="Add Items to Cart">
+    </form>
 
 
 
