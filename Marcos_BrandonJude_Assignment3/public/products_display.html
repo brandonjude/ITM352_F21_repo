@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Store</title>
+    <script src="/product_data.js"></script>
+    <link rel="stylesheet" href="./products_styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<!-- This file will load the order page with product data and prices -->
+
+<style>
+    html, body {
+        background-image: linear-gradient(to top, #92c8fa , white);
+        height: 100%;
+    }
+</style>
+
+<style>
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #2371DC;
+    }
+    
+    li {
+      float: left;
+    }
+    
+    li a {
+      font-family: 'Montserrat', sans-serif;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    
+    li a:hover {
+      background-color: #739fde;
+    }
+
+    #login_button {
+        float: right;
+    }
+    </style>
+
+<script>
+    //when the page loads, check the URL for existence of paramters
+    window.onload = function () {
+        let params = (new URL(document.location)).searchParams;
+        //if the alert parameter exists, load an alert on the client browser
+        if (params.has("alert_error")){
+            alert(params.get("alert_error"));
+        }
+    }
+</script>
+
+
+<body>
+
+    
+    <div class="header_container"><h1>Brandon's Premium Grocery Store</h1></div>
+
+    <ul>
+        <li><a class="" href="">Fruits</a></li>
+        <li><a href="">Vegetables</a></li>
+        <li><a href="">Dairy</a></li>
+        <li><a href="">Meats</a></li>
+        <li id="login_button" class="login_button"><a href="">Log In</a></li>
+    </ul>
+   
+    <div class="welcome_container">
+        <h3>Welcome! Shop below for the freshest products on Earth!</h3>
+    </div>
+
+    <br>
+    <br>
+    <form action="./pre_invoice" name="purchase_form" method="post">
+        <div class="item_container">
+
+            <!-- Iterate through each product from the JSON products file and create its section on the order page -->
+        
+            <script>
+                //iterate through the products_array and load the product information into the order page
+                for (i in products_array) {
+                    document.write(`
+                    <div class="item">
+                        <img class="item_image" src=${products_array[i].image} alt="">
+                        <p class="item_name">${products_array[i].name}</p>
+                        <p class="item_price">Price: $${products_array[i].price}</p>
+                        <label for="quantity_input">Qty</label>
+                        <input type="text" name="quantity_textbox" maxlength="3" value="0">
+                        <p>In stock: ${products_array[i].quantity_available}</p>
+                        <input type="button" value="Add to Cart">
+    
+    
+                    </div>
+                `)
+                }
+            </script>
+          
+        </div>
+            <div class="submit_container">
+                <input type="submit" name="submit_button" id="submit_button" value="Checkout" onclick="">
+             </div>
+    </form>
+        
+
+
+</body>
+
+</html>

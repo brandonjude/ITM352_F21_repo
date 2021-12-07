@@ -8,7 +8,7 @@ app.use(cookieParser());
 
 app.get('/set_cookie', function (request, response) {
 // this will send a cookie to the requester
-    response.cookie('name', 'brandon');
+    response.cookie('name', 'brandon', {maxAge: 15*1000}); //maxAge in miliseconds
     response.send(`The 'name' cookie has been sent`);
 });
 

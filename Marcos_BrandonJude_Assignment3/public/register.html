@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./login_styles.css">
+
+</head>
+
+
+<!-- This is the registration page file. 
+     Users are directed to this page when they click Register on Login page
+     Registration page has input guards,
+     but still performes secondary validation on server -->
+
+<script>
+    //when the page loads, run the following function 
+    window.onload = function () {
+        // check the URL for existence of paramters, assign the query string to varaible params
+        let params = (new URL(document.location)).searchParams;
+   
+    //if params has a key errors (errors were found in the registration information and user redirected back)
+    if (params.has("errors")){
+        //iterate through each element in the form 
+        for (let i in user_register_form.elements){
+            //for each element in the fom, get its corresponding value from params and replace the value
+            user_register_form.elements[i].value = params.get(user_register_form.elements[i].name);
+            //run checkPassword function to alert user of error 
+            checkPassword(document.getElementById("new_password"));
+            //run checkRepeatPassword function to alert user if passwords do not match
+            checkRepeatPassword(document.getElementById("repeat_new_password"));
+            //alert the user to retype password
+            document.getElementById('new_password').className = "highlight";
+            //remove the value from password (no sticky feature for passwords)
+            document.getElementById('new_password').value = "";
+            //remove value from repeat password (no sticky feature for passwords)
+            document.getElementById('repeat_new_password').value = "";
+            //disable the repeat password input until a valid password is chosen 
+            document.getElementById('repeat_new_password').disabled = true;
+            //run checkEmail function to alert user if email is not valid
+            checkEmail(document.getElementById("new_email"));
+            //run checkFullName function to validate the full name
+            checkFullName(document.getElementById("new_full_name"));
+            //alert the user that a registration error occurred
+            alert("There was a registration error. Check below.");
+        }
+    }
+    //if the query string returns a user_exists param
+    if (params.has("user_exists")) { 
+            //alert user that the username already exists
+            document.getElementById('new_username_span').innerHTML = "User already exists!";
+            //change the classname to highlight
+            document.getElementById('new_username').className = "highlight";
+            //reload the username into the username input box
+            document.getElementById('new_username').value = params.get("new_username");
+    }
+}
+</script>
+
+<script>
+
+    //function validateForm will create input guards
+    function validateForm() {
+        //assign all input elements to the inputs variable
+        var inputs = document.getElementsByTagName('input');
+        //iterate through each input element
+        for (var x = 0; x < inputs.length; x++) {
+            //if the input is empty or has the classname 'highlight' (there was a detected error)
+            if (inputs[x].value == "" || inputs[x].className == 'highlight') {
+                //return false which will keep form from being submitted
+                return false;
+                //will break after the first error is detected
+                break
+            }
+        }
+    }
+        //function to check validity of username
+        function checkUsername(entry) {
+
+            //regex to check for special characters or spaces
+            var illegal_char = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/? ]+/;
+
+            //if the value of the username input possesses any characters from illegal_char variable
+            if (illegal_char.test(entry.value) == true) {
+                //alert user of error by changing the innerHTML of the span below the input box
+                document.getElementById('new_username_span').innerHTML = "No special characters or spaces!";
+                //change classname to 'highlight'
+                document.getElementById('new_username').className = "highlight";
+
+            //if the username does not contain special characters, check for lenght requirements
+            } else {
+                if (entry.value.length < 4) {
+                    //alert user of error by changing the innerHTML of the span below the input box
+                    document.getElementById('new_username_span').innerHTML = "Username too short!";
+                     //change classname to 'highlight'
+                    document.getElementById('new_username').className = "highlight";
+
+
+                }
+                if (entry.value.length > 10) {
+                    //alert user of error by changing the innerHTML of the span below the input box
+                    document.getElementById('new_username_span').innerHTML = "Username too long!";
+                     //change classname to 'highlight'
+                    document.getElementById('new_username').className = "highlight";
+
+
+                }
+                // if value of username does not contain special characters and is between 4 and 10 characters
+                if (entry.value.length >= 4 && entry.value.length <= 10) {
+                    //do not (or remove) alert 
+                    document.getElementById('new_username_span').innerHTML = "";
+                    //remove the highlight classname
+                    document.getElementById('new_username').className = "";
+                }
+            }
+        }
+        //function to check validity of password
+        function checkPassword(entry) {
+            //if the lenght of the password is less than 6 characters
+            if (entry.value.length < 6) {
+                //alert the user 
+                document.getElementById('new_password_span').innerHTML = "Include more than 6 characters!";
+                document.getElementById('new_password').className = "highlight";
+                //remove any values from the repeat password input box
+                document.getElementById('repeat_new_password').value = "";
+                //disable password confirmation input until valid password is entered
+                document.getElementById('repeat_new_password').disabled = true;
+            //else if passwords meets length requirement
+            } else {
+                //remove error notifications
+                document.getElementById('new_password_span').innerHTML = "";
+                document.getElementById('new_password').className = "";
+                //enable the repeat password input box
+                document.getElementById('repeat_new_password').disabled = false;
+            }
+        }
+        //function to check validity of repeated username
+        function checkRepeatPassword(entry) {
+            //if the repeated password does not match the first password
+            if (document.getElementById('new_password').value != entry.value) {
+                //alert the user
+                document.getElementById('new_password_span').innerHTML = "Passwords do not match!";
+                document.getElementById('repeat_new_password').className = "highlight";
+
+            } else {
+                document.getElementById('new_password_span').innerHTML = "";
+                document.getElementById('repeat_new_password').className = "";
+            }
+        }
+        //function to check validity of email
+        function checkEmail(entry) {
+            //if the email does not follow the format determined by the regex
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(entry.value) == false) {
+                //alert the user
+                document.getElementById('new_email_span').innerHTML = "Enter valid email!";
+                document.getElementById('new_email').className = "highlight";
+
+            } else {
+                document.getElementById('new_email_span').innerHTML = "";
+                document.getElementById('new_email').className = "";
+            }
+        }
+        //function to check validity of full name
+        function checkFullName(entry) {
+            //regex to check for special characters
+            var illegal_char = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+            //regex to check for digits 
+            var number_char = /\d/;
+            // if the full name input value contains special characters or digits
+            if (illegal_char.test(entry.value) == true || number_char.test(entry.value) == true) {
+                //alert the user and change class name to 'highlights'
+                document.getElementById('new_fullname_span').innerHTML = "No numbers or special characters!";
+                document.getElementById('new_full_name').className = "highlight";
+
+            } else {
+                document.getElementById('new_fullname_span').innerHTML = "";
+                document.getElementById('new_full_name').className = "";
+            }
+        }
+
+</script>
+
+
+<body>
+
+    <div class="register_form">
+
+        <form name="user_register_form" action="/try_register" method="post" onsubmit="return validateForm()">
+            <h2>Create Account</h2>
+            <br>
+            <br>
+            <input type="text" name="new_username" id="new_username" placeholder="Username"
+                onkeyup="checkUsername(this)">
+            <p id="new_username_span"></p>
+            <br>
+            <input type="password" name="new_password" id="new_password" placeholder="Password"
+                onkeyup="checkPassword(this)">
+            <br>
+            <input type="password" name="repeat_new_password" id="repeat_new_password" placeholder="Confirm Password"
+                onkeyup="checkRepeatPassword(this)" disabled='true'>
+            <p id="new_password_span"></p>
+            <br>
+            <input type="text" name="new_email" id="new_email" placeholder="Email" onkeyup="checkEmail(this)">
+            <p id="new_email_span"></p>
+            <br>
+            <input type="text" name="new_full_name" id="new_full_name" placeholder="Full Name"
+                onkeyup="checkFullName(this)">
+            <p id="new_fullname_span"></p>
+            <br>
+            <input type="submit" name="submit_button" id="submit_button" value="Register">
+
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

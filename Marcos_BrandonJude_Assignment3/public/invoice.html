@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <script src="/product_data.js"></script>
+    <script src="/product_data_quantity.js"></script>
+    <script src="/customer_info.js"></script>
+    <link rel="stylesheet" href="./invoice_styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+</head>
+
+<!-- This file will generate the invoice of an order -->
+
+
+<script>
+    //when the page loads, run the following function 
+    window.onload = function () {
+        // check the URL for existence of paramters, assign the query string to varaible params
+        let params = (new URL(document.location)).searchParams;
+        //if the non_existent_user parameter exists
+        if (params.has("user_registered")){
+            alert("User registration successful!");
+        }
+            
+    }
+</script>
+
+<style>
+    html, body {
+        background-image: linear-gradient(to top, #92c8fa , white);
+        height: 100%;
+    }
+</style>
+
+<body>
+
+    <h2>
+        Thank you for shopping at Brandon's Premium Grocery Store
+    </h2>
+    <br>
+    <br>
+    <p>Hello, <strong><script>document.write(`${customer_name}`)</script></strong>. Thank you for your order.</p>
+    <p>A confirmation will be sent to <strong><script>document.write(`${customer_email}`)</script></strong> shortly.</p>
+
+    <br>
+    <br>
+
+    <table>
+        <thead>
+            <th>
+                Item
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Extended Price
+            </th>
+            <th>
+                Weight (lbs)
+            </th>
+        </thead>
+
+        <script>
+
+            //initialize the subtotal and total weight to 0
+            sub_total = 0;
+            total_weight = 0;
+
+            //create the rows of product data for purchased products
+            function generate_item_rows() {
+
+                for (i in products_array) {
+                    //if the quantity provided is 0, then continue. Do not create an invoice row
+                    if (quantity_arr[i] == 0) {
+                        continue;
+                    }
+                    else {
+                        //calculate extended price by multiplying its price and quantity
+                        extended_price = products_array[i]["price"] * quantity_arr[i];
+                        //calculate extended weight by multiplying it quantity and weight and 
+                        //dividing by 16 to get the weight in pounds
+                        extended_weight = (quantity_arr[i] * products_array[i]["weight"])/16;
+                        //add the new extended price to the existing subtotal 
+                        sub_total = sub_total + extended_price;
+                        total_weight = total_weight + extended_weight
+                        document.write(`
+                        <tr>
+                        <td>${products_array[i]["name"]}</td>
+                        <td>${quantity_arr[i]}</td>
+                        <td>$${products_array[i]["price"]}</td>
+                        <td>$${eval(extended_price).toFixed(2)}</td>
+                        <td>${eval(extended_weight).toFixed(2)}</td>
+                        </tr>
+                        `)
+                    }
+                }
+            }
+            //execute the function to build the rows for invoice
+            generate_item_rows();
+
+
+            //compute tax
+            var tax = sub_total * 0.045;
+
+            // initialize shipping cost variable
+            var shipping;
+
+            // A total weight 1 lb or less will be $7 shipping
+            if (total_weight <= 1) {
+                shipping = 7;
+
+            // A total weight greater than 1 pound will be charged an additional
+            // 30 cents for each pound added
+            } else {
+                shipping = ((total_weight - 1) * 0.40) + 7;
+            }
+
+            //compute total 
+            var total = tax + sub_total + shipping;
+
+
+
+
+            document.write(`
+
+                    <tr>
+                    <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                    <td>Sub-total</td>
+                    <td>$${sub_total.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                    <td><span>Tax @ 4.5%</span></td>
+                    <td>$${tax.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                    <td>Total Weight (lbs)</td>
+                    <td>${(total_weight).toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                    <td>Shipping</td>
+                    <td>$${shipping.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>$${total.toFixed(2)}</strong></td>
+                    </tr>
+                    </tbody>
+                    </table>
+                        `);
+        </script>
+
+
+
+    </table>
+
+
+<br>
+
+<p>Shipping Policy<br>  - orders 1 pound or less: $7<br>    - and 30&#162; for each additional pound </p>
+
+</body>
+
+</html>
