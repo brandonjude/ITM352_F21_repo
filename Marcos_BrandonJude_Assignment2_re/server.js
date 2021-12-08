@@ -64,6 +64,10 @@ app.post("/add_to_cart", function (request, response, next) {
         let q = quantity_desired[i];
         if (isNonNegInt(q) == false) {
             errors[`quantity_${i}`] = `${q} is not a valid quantity`;
+        } else {
+            if (q > products_array[product_key][i]['quantity_available']){
+                errors[`quantity_${i}`] = 'Quantity exceeds inventory!'
+            }
         }
     }
 
@@ -100,6 +104,13 @@ app.post("/try_login", function (request, response, next) {
     //pull the username and password from the request body of login page
     user_username = request.body[`username`].toLowerCase(); //set the username to all lowercase letters, case insensitive username
     user_password = request.body[`password`]; //password remains case sensitive
+
+    //if the typeof request.session['username'] != 'undefined'
+    //then user is already signed in
+    //else 
+    //if the user validates their credentials correctly
+    //request.session['username'] = user_username
+    //request.session['email'] = user_reg_info[user_username].email
 
     //validation code taken from Lab 14
     //if the username does not exits in the user_data.json file
