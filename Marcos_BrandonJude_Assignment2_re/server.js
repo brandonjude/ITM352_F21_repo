@@ -144,17 +144,6 @@ app.post("/try_login", function (request, response, next) {
 });
 
 
-
-/* //route for get request for customer_info.js, requested by invoice page to personalize page for current user
-app.get("/customer_info.js", function (request, response, next) {
-    response.type('.js');
-    //take the current username and corresponding email and save to variables that can be accessed by invoice page
-    var customer_info = `var customer_name = ${JSON.stringify(user_reg_info[user_username].name)}; var customer_email = ${JSON.stringify(user_reg_info[user_username].email)}`;
-    response.send(customer_info);
-});
- */
-
-
 //route for post request for try_register, requested by registration page 
 app.post("/try_register", function (request, response, next) {
 
@@ -274,18 +263,6 @@ app.get("/session_data.js", function (request, response, next) {
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
-
-
-
-//route for GET requests to /errors_data.js
-app.get("/errors_data.js", function (request, response, next) {
-    response.type('.js');
-    //will send a response with access to errors array and error_product_index array 
-    var error_str = `var errors = ${JSON.stringify(errors)}; var error_product_index = ${JSON.stringify(error_product_index)};`;
-    console.log(`Invalid quantities: ${error_str}`);
-    response.send(error_str);
-});
-
 
 
 //route to check for get requests to invoice.html file

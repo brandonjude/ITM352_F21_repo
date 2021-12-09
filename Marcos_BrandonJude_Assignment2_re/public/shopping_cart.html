@@ -24,7 +24,13 @@
         background-image: linear-gradient(to top, #92c8fa, white);
         height: 100%;
     }
+    #quantity_input {
+        font-family: 'Montserrat', sans-serif;
+        width: 40px;
+    }
 </style>
+
+
 
 
 <script>
@@ -40,7 +46,7 @@
             `);
         }
 
-        if (typeof user == 'undefined'){
+        if (typeof user == 'undefined') {
             document.write(`
             <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
             </ul>
@@ -51,7 +57,7 @@
             </ul>
             `);
         }
-        
+
 
     }
 
@@ -66,14 +72,14 @@
     <script type="text/javascript">navigationbar()</script>
     <br>
     <script>
-        if (typeof full_name != 'undefined'){
+        if (typeof full_name != 'undefined') {
             document.write(`<p>Hello, <strong>${full_name}</strong>.</p>`)
         }
     </script>
-    <p>Below are your selected items.</p>
-    <p>Click PURCHASE below to check out. Or continue shopping.</p>
+    <p>Below are the items in your cart.</p>
     <br>
-    <input type="button" name="continue_shopping_button" value="Continue Shopping" onclick="window.location = './products_display.html?product_type=Fruits'">
+    <input type="button" name="continue_shopping_button" value="Continue Shopping"
+        onclick="window.location = './products_display.html?product_type=Fruits'">
     <br>
     <br>
 
@@ -123,7 +129,8 @@
                             document.write(`
                         <tr>
                         <td>${products_array[pkey][i]["name"]}</td>
-                        <td>${q}</td>
+                        <td><input type="text" id="quantity_input" value="${q}" name="quantity_input"></input></td>
+                        
                         <td>$${products_array[pkey][i]["price"]}</td>
                         <td>$${eval(extended_price).toFixed(2)}</td>
                         <td>${eval(extended_weight).toFixed(2)}</td>
@@ -137,56 +144,63 @@
             generate_item_rows();
 
 
-            //compute tax
-            var tax = sub_total * 0.045;
+            if (sub_total == 0) {
+                document.write(`<h3>NO ITEMS SELECTED. PLEASE CONTINUE SHOPPING.</h3>`)
+                
 
-            // initialize shipping cost variable
-            var shipping;
-
-            // A total weight 1 lb or less will be $7 shipping
-            if (total_weight <= 1) {
-                shipping = 7;
-
-                // A total weight greater than 1 pound will be charged an additional
-                // 30 cents for each pound added
             } else {
-                shipping = ((total_weight - 1) * 0.40) + 7;
+
+                //compute tax
+                var tax = sub_total * 0.045;
+
+                // initialize shipping cost variable
+                var shipping;
+
+                // A total weight 1 lb or less will be $7 shipping
+                if (total_weight <= 1) {
+                    shipping = 7;
+
+                    // A total weight greater than 1 pound will be charged an additional
+                    // 30 cents for each pound added
+                } else {
+                    shipping = ((total_weight - 1) * 0.40) + 7;
+                }
+
+                //compute total 
+                var total = tax + sub_total + shipping;
+
+                document.write(`
+
+                <tr>
+                <td>&nbsp;</td>
+                </tr>
+                <tr>
+                <td>Sub-total</td>
+                <td>$${sub_total.toFixed(2)}</td>
+                </tr>
+                <tr>
+                <td><span>Tax @ 4.5%</span></td>
+                <td>$${tax.toFixed(2)}</td>
+                </tr>
+                <tr>
+                <td>Total Weight (lbs)</td>
+                <td>${(total_weight).toFixed(2)}</td>
+                </tr>
+                <tr>
+                <td>Shipping</td>
+                <td>$${shipping.toFixed(2)}</td>
+                </tr>
+                <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>$${total.toFixed(2)}</strong></td>
+                </tr>
+                </tbody>
+                </table>
+                    `);
+
             }
 
-            //compute total 
-            var total = tax + sub_total + shipping;
 
-
-
-
-            document.write(`
-
-                    <tr>
-                    <td>&nbsp;</td>
-                    </tr>
-                    <tr>
-                    <td>Sub-total</td>
-                    <td>$${sub_total.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                    <td><span>Tax @ 4.5%</span></td>
-                    <td>$${tax.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                    <td>Total Weight (lbs)</td>
-                    <td>${(total_weight).toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                    <td>Shipping</td>
-                    <td>$${shipping.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong>$${total.toFixed(2)}</strong></td>
-                    </tr>
-                    </tbody>
-                    </table>
-                        `);
         </script>
 
 
@@ -199,7 +213,7 @@
     <p>Shipping Policy<br> - orders 1 pound or less: $7<br> - and 30&#162; for each additional pound </p>
     <br>
     <br>
-    <input type="submit" name="checkout_button" value="PURCHASE">
+    <input type="submit" name="checkout_button" id="checkout_button" value="PURCHASE">
 
 </body>
 
