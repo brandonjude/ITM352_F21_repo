@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fruit Store</title>
     <script src="/product_data.js"></script>
+    <script src="/session_data.js"></script>
+    <link rel="stylesheet" href="./navigation_bar_styles.css">
     <link rel="stylesheet" href="./products_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,38 +22,6 @@
     body {
         background-image: linear-gradient(to top, #92c8fa, white);
         height: 100%;
-    }
-
-
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #2371DC;
-    }
-
-    li {
-        float: left;
-    }
-
-    li a {
-        font-family: 'Montserrat', sans-serif;
-        display: block;
-        color: white;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-    }
-
-    li a:hover {
-        background-color: #739fde;
-    }
-
-    #login_button,
-    #logout_button,
-    #shopping_cart {
-        float: right;
     }
 </style>
 
@@ -81,54 +51,48 @@
             } else {
                 // document.getElementsByName(`quantity_textbox_of_${params.get('product_name')}`).value = params.get(`quantity_textbox_of_${params.get('product_name')}`);
                 let quantities = params.get('quantity').split(',');
-                for (i in quantities){
+                for (i in quantities) {
                     document.getElementById(`quantity_${i}`).value = quantities[i];
                     if (typeof errors[`quantity_${i}`] != 'undefined') {
                         document.getElementById(`error_div_quantity_${i}`).innerHTML = errors[`quantity_${i}`];
                         document.getElementById(`quantity_${i}`).style.backgroundColor = "#FDFF47";
                     }
-                    
-                }
-                
-                alert('Could not add to cart. Please fix errors below.');
-                
-            }
 
+                }
+
+                alert('Could not add to cart. Please fix errors below.');
+            }
         }
     }
+</script>
 
-
+<script>
     function navigationbar() {
 
         document.write(`
-        <div id="nav">
+            <div id="nav">
             <ul>`);
 
         for (p_key in products_array) {
             document.write(`
             <li><a href="./products_display.html?product_type=${p_key}">${p_key}</a></li>
-
-        `);
+            `);
         }
 
-        document.write(`
-
-        <li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html">Cart</a></li>
-        <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
-        <li id="logout_button" class="logout_button"><a href="/logout">Logout</a></li>
-
-        </ul>
-        `);
+        if (typeof user == 'undefined'){
+            document.write(`
+            <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
+            `)
+        } else {
+            document.write(`
+            <li id="logout_button" class="logout_button"><a href="/logout">Logout ${user}</a></li>
+            `);
+        }
+        document.write(`<li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html">Cart</a></li> </ul>`);
+        
+        
 
     }
-
-
-
-
-
-
-
-
 </script>
 
 
@@ -167,7 +131,7 @@
                         <p class="item_name">${products_array[product_type][i].name}</p>
                         <p class="item_price">$${products_array[product_type][i].price}</p>
                         <label for="quantity_input">Qty</label>
-                        <input type="text" id="quantity_${i}" value="0" name="quantity[${i}]"></input>
+                        <input type="text" id="quantity_${i}" value="" placeholder="0" name="quantity[${i}]"></input>
                         <div id="error_div_quantity_${i}">
                         </div>
                         <p>In Stock: ${products_array[product_type][i].quantity_available}</p>

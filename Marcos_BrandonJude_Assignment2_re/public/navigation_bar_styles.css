@@ -1,0 +1,31 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #2371DC;
+}
+
+li {
+    float: left;
+}
+
+li a, li {
+    font-family: 'Montserrat', sans-serif;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #739fde;
+}
+
+#login_button,
+#logout_button,
+#shopping_cart,
+#user_data {
+    float: right;
+}

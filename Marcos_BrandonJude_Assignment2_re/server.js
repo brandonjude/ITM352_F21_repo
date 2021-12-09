@@ -127,22 +127,31 @@ app.post("/try_login", function (request, response, next) {
         } else if (user_reg_info[user_username].password == user_password) {
             //set the state of user logged in to true
             user_logged_in = true;
-            //redirect to the invoice.html
-            response.redirect(`./invoice.html`);
+
+            request.session['username'] = user_username
+            request.session['email'] = user_reg_info[user_username].email
+            console.log(request.session);
+            if (typeof request.session.cart[0] == 'undefined'){
+                response.redirect(`./products_display.html?product_type=Fruits`);
+            } else {
+                response.redirect(`./shopping_cart.html`);
+            }
+            
+            
         }
     }
 });
 
 
 
-//route for get request for customer_info.js, requested by invoice page to personalize page for current user
+/* //route for get request for customer_info.js, requested by invoice page to personalize page for current user
 app.get("/customer_info.js", function (request, response, next) {
     response.type('.js');
     //take the current username and corresponding email and save to variables that can be accessed by invoice page
     var customer_info = `var customer_name = ${JSON.stringify(user_reg_info[user_username].name)}; var customer_email = ${JSON.stringify(user_reg_info[user_username].email)}`;
     response.send(customer_info);
 });
-
+ */
 
 
 //route for post request for try_register, requested by registration page 
@@ -222,8 +231,18 @@ app.post("/try_register", function (request, response, next) {
         new_data = JSON.stringify(user_reg_info);
         //re-write the data the user_data.json file
         fs.writeFileSync('./user_data.json', new_data);
-        //redirect to the login page with a paramter to alert a registration
-        response.redirect('./login.html?registration_successful');
+        
+
+
+        request.session['username'] = new_user_username;
+        request.session['email'] = new_user_email;
+            console.log(`Session data after registering: ${request.session}`);
+            if (typeof request.session.cart[0] == 'undefined'){
+                response.redirect(`./products_display.html?product_type=Fruits`);
+            } else {
+                response.redirect(`./shopping_cart.html`);
+            }
+
     }
 
 });
@@ -242,14 +261,14 @@ app.get("/product_data.js", function (request, response, next) {
 
 
 //route for GET requests for /product_data_quantity.js
-app.get("/product_data_quantity.js", function (request, response, next) {
+app.get("/session_data.js", function (request, response, next) {
     response.type('.js');
     // quantity_arr = request.body[`quantity_textbox`];
     //allow access to the quantity_arr array object 
     if (typeof request.session.cart == 'undefined'){
         request.session.cart = {};
     }
-    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)};`;
+    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)}; var user = ${JSON.stringify(request.session.username)}; var email = ${JSON.stringify(request.session.email)}; var full_name = ${JSON.stringify(user_reg_info[request.session.username].name)};`;
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
@@ -402,7 +421,9 @@ app.listen(8080, () => console.log(`Listening on port 8080`)); // note the use o
 // returns false if q is not an whole integer or positive number
 function isNonNegInt(q) {
 
-    if (q == "") q == 0;
+    if (q == "") {
+        q = 0;
+    }
     if (Number(q) != q) {
         return false;
     }

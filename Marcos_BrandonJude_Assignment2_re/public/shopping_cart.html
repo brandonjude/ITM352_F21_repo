@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <script src="/product_data.js"></script>
-    <script src="/product_data_quantity.js"></script>
+    <script src="/session_data.js"></script>
     <script src="/customer_info.js"></script>
+    <link rel="stylesheet" href="./navigation_bar_styles.css">
     <link rel="stylesheet" href="./invoice_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,19 +26,52 @@
     }
 </style>
 
+
+<script>
+    function navigationbar() {
+
+        document.write(`
+            <div id="nav">
+            <ul>`);
+
+        for (p_key in products_array) {
+            document.write(`
+            <li><a href="./products_display.html?product_type=${p_key}">${p_key}</a></li>
+            `);
+        }
+
+        if (typeof user == 'undefined'){
+            document.write(`
+            <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
+            </ul>
+            `)
+        } else {
+            document.write(`
+            <li id="logout_button" class="logout_button"><a href="/logout">Logout ${user}</a></li>
+            </ul>
+            `);
+        }
+        
+
+    }
+
+</script>
+
 <body>
 
     <h2>
         Shopping Cart
     </h2>
     <br>
+    <script type="text/javascript">navigationbar()</script>
     <br>
-    <p>Hello, <strong>
-            <script>document.write(`${customer_name}`)</script>
-        </strong>. Below are your selected items.</p>
-    <p>Click purchase below to check out. <strong>
-            <script>document.write(`${customer_email}`)</script>
-        </strong> shortly.</p>
+    <script>
+        if (typeof user != 'undefined'){
+            document.write(`<p>Hello, <strong>${user}</strong>.</p>`)
+        }
+    </script>
+    <p>Below are your selected items.</p>
+    <p>Click PURCHASE below to check out. Or continue shopping.</p>
 
     <br>
     <br>
@@ -160,6 +194,10 @@
 
 
     <br>
+    <input type="button" name="continue_shopping_button" value="Continue Shopping" onclick="window.location = './products_display.html?product_type=Fruits'">
+    <br>
+    <br>
+    <input type="submit" name="checkout_button" value="PURCHASE">
 
     <p>Shipping Policy<br> - orders 1 pound or less: $7<br> - and 30&#162; for each additional pound </p>
 
