@@ -128,8 +128,9 @@ app.post("/try_login", function (request, response, next) {
             //set the state of user logged in to true
             user_logged_in = true;
 
-            request.session['username'] = user_username
-            request.session['email'] = user_reg_info[user_username].email
+            request.session['username'] = user_username;
+            request.session['email'] = user_reg_info[user_username].email;
+            request.session['full_name'] = user_reg_info[user_username].name;
             console.log(request.session);
             if (typeof request.session.cart[0] == 'undefined'){
                 response.redirect(`./products_display.html?product_type=Fruits`);
@@ -236,6 +237,7 @@ app.post("/try_register", function (request, response, next) {
 
         request.session['username'] = new_user_username;
         request.session['email'] = new_user_email;
+        request.session['full_name'] = new_user_fullname;
             console.log(`Session data after registering: ${request.session}`);
             if (typeof request.session.cart[0] == 'undefined'){
                 response.redirect(`./products_display.html?product_type=Fruits`);
@@ -268,124 +270,10 @@ app.get("/session_data.js", function (request, response, next) {
     if (typeof request.session.cart == 'undefined'){
         request.session.cart = {};
     }
-    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)}; var user = ${JSON.stringify(request.session.username)}; var email = ${JSON.stringify(request.session.email)}; var full_name = ${JSON.stringify(user_reg_info[request.session.username].name)};`;
+    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)}; var user = ${JSON.stringify(request.session.username)};  var full_name = ${JSON.stringify(request.session.full_name)};`;
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
-
-
-
-//route for a POST request to /invoice, /invoice is action of order submit button
-app.post('/pre_invoice', function (req, res, next) {
-    //access the JSON data from the element quantity_textbox 
-    quantity_arr = req.body[`quantity_textbox`];
-    console.log(quantity_arr);
-
-    //create global errors array 
-    errors = [];
-    //create global array that will store the index of each invalid quantity
-    error_product_index = [];
-
-    // returns false if q is not an whole integer or positive number
-    function isNonNegInt(q) {
-
-        if (q == "") q == 0;
-        if (Number(q) != q) {
-            //if q is not a number, push the error notification to the error array
-            errors.push('not a number!'); // Check if string is a number value
-            //pushing the index of q into the error_product_index array
-            error_product_index.push(quantity_arr.indexOf(q));
-            return false;
-        }
-        else if (q < 0) {
-            //if q is not a positive value, push the error notification to the error array
-            errors.push('a negative value!'); // Check if it is non-negative
-            //pushing the index of q into the error_product_index array
-            error_product_index.push(quantity_arr.indexOf(q));
-            return false;
-        }
-        else if (parseInt(q) != q) {
-            //if q is not a whole number, push the error notification to the error array
-            errors.push('not an integer!'); // Check that it is an integer
-            //pushing the index of q into the error_product_index array
-            error_product_index.push(quantity_arr.indexOf(q));
-            return false;
-        }
-
-        //if q is a valid, whole positive integer, return true
-        return true;
-    }
-
-    //declare global for the sum of all products purchased
-    sum_product_qty = 0;
-
-    //declare global array to store the index of quantities that exceed the stores inventory 
-    too_much_index = [];
-
-    //iterate through the quantities received from the POST
-    for (i in quantity_arr) {
-        //check each value in the quantity in the array is valid
-        //quantity validation 
-        isNonNegInt(quantity_arr[i]);
-        // add each quantity to the sum of quantities 
-        sum_product_qty += parseInt(quantity_arr[i]);
-        // if the quantity exceeds the quantity available, then push the index of the bad quantity
-        // into the too_much_index array
-        if (quantity_arr[i] > products_array[i].quantity_available) {
-            too_much_index.push(quantity_arr.indexOf(quantity_arr[i]));
-        }
-
-    }
-
-    console.log(`Total items purchased ${sum_product_qty}`);
-
-    //if the user has not selected any products
-    if (sum_product_qty == 0) {
-        //redirect back to the order page and alert the user to add items to cart
-        var message = "Please select items from store";
-        res.redirect(`./products_display.html?alert_error=${message}`);
-    }
-
-    //else if there are errors
-    else if (errors.length > 0) {
-        var message = ''
-        // for each error, alert the user of the quantity error and its associated product name
-        for (i in errors) {
-            message += `Your quantity for ${(products_array[error_product_index[i]].name)} is ${errors[i]} \n`;
-        }
-        // redirect to the order page with a query string that will instruct client browser to alert user
-        res.redirect(`./products_display.html?alert_error=${message}`);
-    }
-
-    //else if there are quantities that exceed availability
-    else if (too_much_index.length > 0) {
-        var message = 'Quantities exceeded inventory!\n\n';
-        for (i in too_much_index) {
-            message += `Desired quantity for ${(products_array[too_much_index[i]].name)}: ${quantity_arr[too_much_index[i]]}\nStore inventory: ${products_array[too_much_index[i]].quantity_available}\n`;
-        }
-        message += `\n\nPlease adjust your quantity!`
-        // redirect to the order page with a query string that will instruct client browser to alert user
-        res.redirect(`./products_display.html?alert_error=${message}`);
-    }
-
-    else {
-
-        //remove the purchased quantity from the inventory
-        //update with the new quantity available for products 
-        for (i in products_array) {
-            products_array[i].quantity_available -= Number(quantity_arr[i]);
-        }
-        //if at least 1 product is selected and all quantites are valid, send to invoice.html
-        res.redirect('./login.html')
-    }
-    console.log(errors);
-    //console.log() the new quantity available for each product
-    for (i in products_array) {
-        console.log(`New quantity for ${products_array[i].name} is ${products_array[i].quantity_available}`)
-    }
-
-});
-
 
 
 
@@ -408,6 +296,16 @@ app.get("/invoice.html", function (request, response, next) {
         response.redirect('./login.html?please_sign_in');
     }
     next();
+});
+
+
+
+
+app.get("/logout", function (request, response, next) {
+    //if the user has not successfully logged in but tries to access invoice
+    request.session.destroy();
+    console.log(request.session);
+    response.redirect('./');
 });
 
 //default route into the ./public directory for any route that was not previously specified
