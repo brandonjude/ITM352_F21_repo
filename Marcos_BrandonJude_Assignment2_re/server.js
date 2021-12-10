@@ -35,6 +35,12 @@ app.use(express.json())
 //route for all methods and paths
 app.all('*', function (request, response, next) {
     console.log(request.method + ' to path ' + request.path + " query " + JSON.stringify(request.body[`quantity_textbox`]));
+
+    if (typeof request.session.cart == 'undefined') {
+        request.session.cart = {};
+    }
+
+
     next();
 });
 
@@ -132,7 +138,7 @@ app.post("/try_login", function (request, response, next) {
             request.session['email'] = user_reg_info[user_username].email;
             request.session['full_name'] = user_reg_info[user_username].name;
             console.log(request.session);
-            if (typeof request.session.cart[0] == 'undefined'){
+            if (Object.keys(request.session.cart).length == 0){
                 response.redirect(`./products_display.html?product_type=Fruits`);
             } else {
                 response.redirect(`./shopping_cart.html`);
@@ -276,8 +282,16 @@ app.get("/invoice.html", function (request, response, next) {
 });
 
 
+/* app.get("/shopping_cart.html", function (request, response, next) {
+    //if the user has not successfully logged in but tries to access invoice
+    if (Object.keys(request.session.cart).length == 0){
+        response.redirect(`./products_display.html?product_type=Fruits&no_items_in_cart`);
+    } else {
+        response.redirect(`./shopping_cart.html`); 
+    }
+});
 
-
+ */
 app.get("/logout", function (request, response, next) {
     //if the user has not successfully logged in but tries to access invoice
     request.session.destroy();

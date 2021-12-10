@@ -37,6 +37,40 @@
     }
 </script>
 
+
+<script>
+    function checkQuantities(){
+        has_quantity = false;
+        for (i = 0; i < products_array[product_type].length; i++) {
+            var quantity = document.getElementById(`quantity_${i}`);
+            if (quantity.value == "" || quantity.value == 0 || quantity.value == '0'){
+                has_quantity = false;
+                continue;
+            } else {
+                has_quantity = true;
+                break;
+            }
+        }
+        if (has_quantity == false){
+            alert('No items selected. Add items.');
+        }
+        return has_quantity;
+    }
+
+    function checkCartData(){
+        if (Object.keys(cart_data).length == 0){
+            alert('Add items to cart to view cart.');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    
+</script>
+
+
+
 <script>
     //when the page loads, check the URL for existence of paramters
     window.onload = function () {
@@ -64,6 +98,10 @@
                 alert('Could not add to cart. Please fix errors below.');
             }
         }
+
+        if (params.has('no_items_in_cart')){
+            alert("No items in cart. Add some items!")
+        }
     }
 </script>
 
@@ -89,7 +127,7 @@
             <li id="logout_button" class="logout_button"><a href="/logout">Logout ${user}</a></li>
             `);
         }
-        document.write(`<li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html">Cart</a></li> </ul>`);
+        document.write(`<li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html" onclick="return checkCartData()">Cart</a></li> </ul>`);
         
         
 
@@ -114,7 +152,7 @@
 
 
     <!-- Iterate through each product from the JSON products file and create its section on the order page -->
-    <form name="product_${i}" action="/add_to_cart" method="post">
+    <form name="product_${i}" action="/add_to_cart" method="post" onsubmit="return checkQuantities();">
 
         <script>
 
