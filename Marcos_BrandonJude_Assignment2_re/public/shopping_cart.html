@@ -78,8 +78,8 @@
     </script>
     <p>Below are the items in your cart.</p>
     <br>
-    <input type="button" name="continue_shopping_button" value="Continue Shopping"
-        onclick="window.location = './products_display.html?product_type=Fruits'">
+    <form action="./update_cart" method="post">
+    <input type="submit" name="update_cart_button" value="Update Cart">
     <br>
     <br>
 
@@ -101,17 +101,16 @@
                 Weight (lbs)
             </th>
         </thead>
-
+        
         <script>
 
             //initialize the subtotal and total weight to 0
             sub_total = 0;
             total_weight = 0;
-
+        
             //create the rows of product data for purchased products
-            function generate_item_rows() {
-                for (pkey in cart_data) {
-                    for (i in cart_data[pkey]) {
+            for (let pkey in cart_data) {
+                    for (let i in cart_data[pkey]) {
                         let q = cart_data[pkey][i]
                         //if the quantity provided is 0, then continue. Do not create an invoice row
                         if (q == 0) {
@@ -129,7 +128,7 @@
                             document.write(`
                         <tr>
                         <td>${products_array[pkey][i]["name"]}</td>
-                        <td><input type="text" id="quantity_input" value="${q}" name="quantity_input"></input></td>
+                        <td><input type="text" id="quantity_input" value="${q}" name="cart_update_${pkey}_${i}"></input></td>
                         
                         <td>$${products_array[pkey][i]["price"]}</td>
                         <td>$${eval(extended_price).toFixed(2)}</td>
@@ -139,9 +138,7 @@
                         }
                     }
                 }
-            }
-            //execute the function to build the rows for invoice
-            generate_item_rows();
+            
 
 
             if (sub_total == 0) {
@@ -203,7 +200,7 @@
 
         </script>
 
-
+</form>
 
     </table>
 

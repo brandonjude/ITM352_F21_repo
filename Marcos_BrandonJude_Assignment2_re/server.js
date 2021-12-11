@@ -299,6 +299,28 @@ app.get("/logout", function (request, response, next) {
     response.redirect('./');
 });
 
+
+
+//this is for updating the cart, overwrite cart session
+app.post("/update_cart", function (request, response, next) {
+
+    console.log(request.body);
+    //validate the quantities are available
+    //validate valid quantities 
+    //check if quantities available 
+    for (let pkey in request.session.cart) {
+        for (let i in request.session.cart[pkey]) {
+            if (request.session.cart[pkey][i] == 0){
+                continue;
+            } 
+            request.session.cart[pkey][i] = Number(request.body[`cart_update_${pkey}_${i}`]);
+        }
+    }
+    console.log(request.body.cart);
+    console.log(request.session.cart);
+    response.redirect('./shopping_cart.html');
+});
+
 //default route into the ./public directory for any route that was not previously specified
 app.use(express.static('./public'));
 
