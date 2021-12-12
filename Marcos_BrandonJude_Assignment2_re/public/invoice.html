@@ -8,8 +8,8 @@
     <title>Invoice</title>
     <script src="/product_data.js"></script>
     <script src="/session_data.js"></script>
-    <script src="/customer_info.js"></script>
-    <link rel="stylesheet" href="./invoice_styles.css">
+    <script src="/clear_session.js"></script>
+    <link rel="stylesheet" href="./checkout_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
@@ -17,26 +17,31 @@
 
 <!-- This file will generate the invoice of an order -->
 
+<script>
+    window.onload = function () {
+        alert('Order processed successfully!')
+    }
+</script>
+
 <style>
     html,
     body {
-        background-image: linear-gradient(to top, #92c8fa, white);
+        background-image: linear-gradient(to top, #a6f5d0, white);
         height: 100%;
     }
 </style>
 
 <body>
-
     <h2>
-        Thank you for shopping at Brandon's Premium Fruit Store
+        Thank you for shopping at Brandon's Premium Grocery Store
     </h2>
     <br>
     <br>
     <p>Hello, <strong>
-            <script>document.write(`${customer_name}`)</script>
+            <script>document.write(`${full_name}`)</script>
         </strong>. Thank you for your order.</p>
     <p>A confirmation will be sent to <strong>
-            <script>document.write(`${customer_email}`)</script>
+            <script>document.write(`${user_email}`)</script>
         </strong> shortly.</p>
 
     <br>

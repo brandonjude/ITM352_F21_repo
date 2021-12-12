@@ -10,11 +10,12 @@ var app = express();
 //load the file system module
 const fs = require('fs');
 
+const nodemailer = require('nodemailer');
+
 //save path to user_data.json to variable user_data_file
 user_data_file = './user_data.json';
 
-//set the initial state of user logged in to be false
-user_logged_in = false;
+
 
 //pulling data from product_data_.json and assigning to products_array
 var products_array = require('./product_data_.json')
@@ -34,7 +35,7 @@ app.use(express.json())
 
 //route for all methods and paths
 app.all('*', function (request, response, next) {
-    console.log(request.method + ' to path ' + request.path + " query " + JSON.stringify(request.body[`quantity_textbox`]));
+    console.log(request.method + ' to path ' + request.path);
 
     if (typeof request.session.cart == 'undefined') {
         request.session.cart = {};
@@ -71,7 +72,7 @@ app.post("/add_to_cart", function (request, response, next) {
         if (isNonNegInt(q) == false) {
             errors[`quantity_${i}`] = `${q} is not a valid quantity`;
         } else {
-            if (q > products_array[product_key][i]['quantity_available']){
+            if (q > products_array[product_key][i]['quantity_available']) {
                 errors[`quantity_${i}`] = 'Quantity exceeds inventory!'
             }
         }
@@ -132,19 +133,19 @@ app.post("/try_login", function (request, response, next) {
             // else if username and password match
         } else if (user_reg_info[user_username].password == user_password) {
             //set the state of user logged in to true
-            user_logged_in = true;
+            
 
             request.session['username'] = user_username;
             request.session['email'] = user_reg_info[user_username].email;
             request.session['full_name'] = user_reg_info[user_username].name;
             console.log(request.session);
-            if (Object.keys(request.session.cart).length == 0){
+            if (Object.keys(request.session.cart).length == 0) {
                 response.redirect(`./products_display.html?product_type=Fruits`);
             } else {
                 response.redirect(`./shopping_cart.html`);
             }
-            
-            
+
+
         }
     }
 });
@@ -227,18 +228,18 @@ app.post("/try_register", function (request, response, next) {
         new_data = JSON.stringify(user_reg_info);
         //re-write the data the user_data.json file
         fs.writeFileSync('./user_data.json', new_data);
-        
+
 
 
         request.session['username'] = new_user_username;
         request.session['email'] = new_user_email;
         request.session['full_name'] = new_user_fullname;
-            console.log(`Session data after registering: ${request.session}`);
-            if (typeof request.session.cart[0] == 'undefined'){
-                response.redirect(`./products_display.html?product_type=Fruits`);
-            } else {
-                response.redirect(`./shopping_cart.html`);
-            }
+        console.log(`Session data after registering: ${request.session}`);
+        if (typeof request.session.cart[0] == 'undefined') {
+            response.redirect(`./products_display.html?product_type=Fruits`);
+        } else {
+            response.redirect(`./shopping_cart.html`);
+        }
 
     }
 
@@ -262,10 +263,10 @@ app.get("/session_data.js", function (request, response, next) {
     response.type('.js');
     // quantity_arr = request.body[`quantity_textbox`];
     //allow access to the quantity_arr array object 
-    if (typeof request.session.cart == 'undefined'){
+    if (typeof request.session.cart == 'undefined') {
         request.session.cart = {};
     }
-    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)}; var user = ${JSON.stringify(request.session.username)};  var full_name = ${JSON.stringify(request.session.full_name)};`;
+    var products_qty_str = `var cart_data = ${JSON.stringify(request.session.cart)}; var user = ${JSON.stringify(request.session.username)};  var full_name = ${JSON.stringify(request.session.full_name)}; var user_email = ${JSON.stringify(request.session.email)};`;
     //send the quantity_arr array object 
     response.send(products_qty_str);
 });
@@ -274,7 +275,7 @@ app.get("/session_data.js", function (request, response, next) {
 //route to check for get requests to invoice.html file
 app.get("/invoice.html", function (request, response, next) {
     //if the user has not successfully logged in but tries to access invoice
-    if (!user_logged_in) {
+    if (typeof request.session.username == 'undefined') {
         //redirect back to the login page with query string to alert user to sign in first
         response.redirect('./login.html?please_sign_in');
     }
@@ -300,6 +301,12 @@ app.get("/logout", function (request, response, next) {
 });
 
 
+app.get("/clear_session.js", function (request, response, next) {
+    //if the user has not successfully logged in but tries to access invoice
+    request.session.destroy();
+    next();
+});
+
 
 //this is for updating the cart, overwrite cart session
 app.post("/update_cart", function (request, response, next) {
@@ -310,9 +317,9 @@ app.post("/update_cart", function (request, response, next) {
     //check if quantities available 
     for (let pkey in request.session.cart) {
         for (let i in request.session.cart[pkey]) {
-            if (request.session.cart[pkey][i] == 0){
+            if (request.session.cart[pkey][i] == 0) {
                 continue;
-            } 
+            }
             request.session.cart[pkey][i] = Number(request.body[`cart_update_${pkey}_${i}`]);
         }
     }
@@ -320,6 +327,59 @@ app.post("/update_cart", function (request, response, next) {
     console.log(request.session.cart);
     response.redirect('./shopping_cart.html');
 });
+
+
+
+
+app.post("/finalCheckout", function (request, response, next) {
+    console.log(`Current user info: ${request.session.username}` )
+    
+
+        //if the user has not successfully logged in but tries to access invoice
+        // Generate HTML invoice string
+        var invoice_str = `Thank you for your order, ${request.session.full_name}! <br><br><table border><th>Quantity</th><th>Item</th>`;
+        var shopping_cart = request.session.cart;
+        for (product_key in products_array) {
+            for (i = 0; i < products_array[product_key].length; i++) {
+                if (typeof shopping_cart[product_key] == 'undefined') continue;
+                qty = shopping_cart[product_key][i];
+                if (qty > 0) {
+                    invoice_str += `<tr><td>${qty}</td><td>${products_array[product_key][i].name}</td><tr>`;
+                }
+            }
+        }
+        invoice_str += '</table>';
+        // Set up mail server. Only will work on UH Network due to security restrictions
+        var transporter = nodemailer.createTransport({
+            //https://mailtrap.io/blog/nodemailer-gmail/
+            service: 'gmail',
+            auth: {
+                user: 'brandonitm352@gmail.com',
+                pass: 'brandonlovesitm352'
+            }
+        });
+
+        var user_email = request.session.email;
+        var mailOptions = {
+            from: 'brandons_grocery@health.com',
+            to: user_email,
+            subject: "Order Confirmation - Brandon's Premium Grocery Store",
+            html: invoice_str
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                invoice_str += '<br>There was an error and your invoice could not be emailed :(';
+            } else {
+                invoice_str += `<br>Your invoice was mailed to ${user_email}`;
+            }
+            response.redirect(`./invoice.html`);
+        });
+
+});
+
+
+
 
 //default route into the ./public directory for any route that was not previously specified
 app.use(express.static('./public'));

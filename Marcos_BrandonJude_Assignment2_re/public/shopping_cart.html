@@ -8,7 +8,6 @@
     <title>Shopping Cart</title>
     <script src="/product_data.js"></script>
     <script src="/session_data.js"></script>
-    <script src="/customer_info.js"></script>
     <link rel="stylesheet" href="./navigation_bar_styles.css">
     <link rel="stylesheet" href="./invoice_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,11 +25,20 @@
     }
     #quantity_input {
         font-family: 'Montserrat', sans-serif;
-        width: 40px;
+        width: 50px;
     }
 </style>
 
-
+<script>
+    function items_in_cart(){
+        if (document.getElementById('quantity_input') == null){
+            alert('No items in cart! Add items to cart.')
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>
 
 
 <script>
@@ -128,7 +136,7 @@
                             document.write(`
                         <tr>
                         <td>${products_array[pkey][i]["name"]}</td>
-                        <td><input type="text" id="quantity_input" value="${q}" name="cart_update_${pkey}_${i}"></input></td>
+                        <td><input type="number" id="quantity_input" value="${q}" name="cart_update_${pkey}_${i}" min="0" max="${products_array[pkey][i]['quantity_available']}" step="1"></input></td>
                         
                         <td>$${products_array[pkey][i]["price"]}</td>
                         <td>$${eval(extended_price).toFixed(2)}</td>
@@ -210,7 +218,10 @@
     <p>Shipping Policy<br> - orders 1 pound or less: $7<br> - and 30&#162; for each additional pound </p>
     <br>
     <br>
-    <input type="submit" name="checkout_button" id="checkout_button" value="PURCHASE">
+    <form action="/finalCheckout" method="post" onsubmit="return items_in_cart()">
+        <input type="submit" name="checkout_button" id="checkout_button" value="PURCHASE" >
+    </form>
+   
 
 </body>
 
