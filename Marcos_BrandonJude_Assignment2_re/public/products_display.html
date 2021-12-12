@@ -159,10 +159,12 @@
 
             // product_key as a hidden input so server can get products_array quantity
             document.write(`<input type="hidden" name="product_type" value="${product_type}">`);
+            
             //setting up the form with for statement
             //load the product information into the order page with for loop
             document.write(`<div class="item_container">`)
             for (i = 0; i < products_array[product_type].length; i++) {
+                
                 document.write(`
                     <div class="item">
                         
@@ -182,11 +184,14 @@
 
                     </div>
                 
-                </div>
+                
+
 
                 `);
             }
 
+            
+            document.write(`</div>`)
 
         </script>
         <input type="submit" name="submit_button" value="Add Items to Cart">
