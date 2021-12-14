@@ -333,6 +333,12 @@ app.post("/update_cart", function (request, response, next) {
 
 app.post("/finalCheckout", function (request, response, next) {
     console.log(`Current user info: ${request.session.username}` )
+
+
+    if (typeof request.session.username == 'undefined') {
+        //redirect back to the login page with query string to alert user to sign in first
+        response.redirect('./login.html?please_sign_in');
+    } else {
     
 
         //if the user has not successfully logged in but tries to access invoice
@@ -376,6 +382,15 @@ app.post("/finalCheckout", function (request, response, next) {
             response.redirect(`./invoice.html`);
         });
 
+    }
+
+
+});
+
+
+app.post("/done", function (request, response, next) {
+    response.redirect(`./`);
+    next();
 });
 
 
