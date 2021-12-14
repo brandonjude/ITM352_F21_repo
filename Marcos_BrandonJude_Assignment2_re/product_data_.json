@@ -33,7 +33,7 @@
             "price": 1,
             "image": "./images/cherry.png",
             "weight": 0.5,
-            "quantity_available": 125
+            "quantity_available": 150
         }
     ],
     "Meats": [

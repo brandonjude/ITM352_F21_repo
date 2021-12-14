@@ -15,9 +15,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
-<!-- This file will generate the invoice of an order -->
+<!-- This file will generate the invoice of an order after successful processing.
+    Users session data will be destroyed after page loads.
+    User can click Done button to be redirected back to index page. -->
 
 <script>
+    //if user gets to this page, then alert of successful order processing
     window.onload = function () {
         alert('Order processed successfully!')
     }

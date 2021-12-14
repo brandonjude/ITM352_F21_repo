@@ -15,7 +15,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 </head>
 
-<!-- This file will generate the invoice of an order -->
+<!-- This file will generate the shopping cart of a user
+    Shopping cart is generated from the cart object of a users session data.
+    If user is logged in, page will be personalized to user. -->
 
 <style>
     html,
@@ -41,11 +43,17 @@
 </style>
 
 <script>
+    //function called when user clicked "final checkout" button
+    //will check to see if user removed ALL items from cart but tries to checkout
     function items_in_cart(){
+        //if not quantity_inputs(items) exist in cart
         if (document.getElementById('quantity_input') == null){
+            //alert user to add items to the cart
             alert('No items in cart! Add items to cart.')
+            //return false (prevent posting of data to server)
             return false;
         } else {
+            //else process and send to server
             return true;
         }
     }
@@ -53,31 +61,31 @@
 
 
 <script>
+    //fucntion will generate the navigation bar at the top of page
     function navigationbar() {
-
         document.write(`
             <div id="nav">
             <ul>`);
-
+        //iterate through products_array object and create a tab for each product type
         for (p_key in products_array) {
             document.write(`
             <li><a href="./products_display.html?product_type=${p_key}">${p_key}</a></li>
             `);
         }
-
+        //check to see if the user is logged in
+        //if not logged in, display the login button
         if (typeof user == 'undefined') {
             document.write(`
             <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
             </ul>
             `)
         } else {
+            //if user IS logged in, display the logout button with users username
             document.write(`
             <li id="logout_button" class="logout_button"><a href="/logout">Logout ${user}</a></li>
             </ul>
             `);
         }
-
-
     }
 
 </script>
@@ -91,6 +99,7 @@
     <script type="text/javascript">navigationbar()</script>
     <br>
     <script>
+        //if the user logged in, grab the full name of user and display on page
         if (typeof full_name != 'undefined') {
             document.write(`<p>Hello, <strong>${full_name}</strong>.</p>`)
         }
@@ -159,7 +168,8 @@
                 }
             
 
-
+            //if the subtotal is 0, then the user did not select any items or deleted all items
+            //alert user to continue shopping
             if (sub_total == 0) {
                 document.write(`<h3>NO ITEMS SELECTED. PLEASE CONTINUE SHOPPING.</h3>`)
                 
