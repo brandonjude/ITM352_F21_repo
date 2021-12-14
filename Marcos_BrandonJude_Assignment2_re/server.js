@@ -339,6 +339,12 @@ app.post("/finalCheckout", function (request, response, next) {
         //redirect back to the login page with query string to alert user to sign in first
         response.redirect('./login.html?please_sign_in');
     } else {
+
+
+
+
+        
+       
     
 
         //if the user has not successfully logged in but tries to access invoice
@@ -354,6 +360,25 @@ app.post("/finalCheckout", function (request, response, next) {
                 }
             }
         }
+
+
+        var updated_shopping_cart = request.session.cart;
+        for (product_key in products_array) {
+            for (i = 0; i < products_array[product_key].length; i++) {
+                if (typeof updated_shopping_cart[product_key] == 'undefined') continue;
+                qty_to_remove = updated_shopping_cart[product_key][i];
+                products_array[product_key][i]['quantity_available'] -= qty_to_remove;
+            }
+        }
+
+        new_product_data = JSON.stringify(products_array);
+        //re-write the data the user_data.json file
+        fs.writeFileSync('./product_data_.json', new_product_data);
+
+
+
+
+
         invoice_str += '</table>';
         // Set up mail server. Only will work on UH Network due to security restrictions
         var transporter = nodemailer.createTransport({

@@ -1,134 +1,108 @@
 {
     "Fruits": [
-        {  
-            "name":"Watermelon",  
-            "price": 17.00,  
+        {
+            "name": "Watermelon",
+            "price": 17,
             "image": "./images/watermelon.png",
             "weight": 320,
             "quantity_available": 90
-        }, 
-        {  
-            "name":"Mangosteen",  
-            "price": 14.00,  
+        },
+        {
+            "name": "Mangosteen",
+            "price": 14,
             "image": "./images/mangosteen.png",
             "weight": 7,
             "quantity_available": 65
-        }, 
-        {  
-            "name":"Lemon",  
-            "price": 4.00,  
+        },
+        {
+            "name": "Lemon",
+            "price": 4,
             "image": "./images/lemon.png",
             "weight": 3.5,
             "quantity_available": 95
-        }, 
-        {  
-            "name":"Dragon Fruit",  
-            "price": 11.00,  
+        },
+        {
+            "name": "Dragon Fruit",
+            "price": 11,
             "image": "./images/dragonfruit.png",
             "weight": 15,
             "quantity_available": 60
-        }, 
-        {  
-            "name":"Cherry",  
-            "price": 1,  
+        },
+        {
+            "name": "Cherry",
+            "price": 1,
             "image": "./images/cherry.png",
             "weight": 0.5,
             "quantity_available": 125
         }
     ],
-
-
-
-
-
     "Meats": [
         {
-            "name":"Chicken",  
-            "price": 12,  
+            "name": "Chicken",
+            "price": 12,
             "image": "./images/chicken.png",
             "weight": 7,
             "quantity_available": 70
         },
-    
         {
-            "name":"Steak",  
-            "price": 23,  
+            "name": "Steak",
+            "price": 23,
             "image": "./images/steak.png",
             "weight": 3,
             "quantity_available": 70
         },
-    
         {
-            "name":"Sausage",  
-            "price": 15,  
+            "name": "Sausage",
+            "price": 15,
             "image": "./images/sausage.png",
             "weight": 4,
             "quantity_available": 70
         }
     ],
-
-    
-
-
-
     "Vegetables": [
         {
-            "name":"Cabbage",  
-            "price": 7,  
+            "name": "Cabbage",
+            "price": 7,
             "image": "./images/cabbage.png",
             "weight": 3,
             "quantity_available": 90
         },
-    
         {
-            "name":"Onion",  
-            "price": 2,  
+            "name": "Onion",
+            "price": 2,
             "image": "./images/onion.png",
             "weight": 1,
             "quantity_available": 100
         },
-    
         {
-            "name":"Tomato",  
-            "price": 3,  
+            "name": "Tomato",
+            "price": 3,
             "image": "./images/tomato.png",
             "weight": 2,
             "quantity_available": 100
         }
-
     ],
-    
-
-
-    "Dairy":[
+    "Dairy": [
         {
-            "name":"Cheese",  
-            "price": 13,  
+            "name": "Cheese",
+            "price": 13,
             "image": "./images/cheese.png",
             "weight": 5,
-            "quantity_available": 40
+            "quantity_available": 60
         },
-    
         {
-            "name":"Milk",  
-            "price": 6,  
+            "name": "Milk",
+            "price": 6,
             "image": "./images/milk.png",
             "weight": 7,
-            "quantity_available": 40
+            "quantity_available": 80
         },
-    
         {
-            "name":"Fruit Yogurt",  
-            "price": 8,  
+            "name": "Fruit Yogurt",
+            "price": 8,
             "image": "./images/yogurt.png",
             "weight": 6,
-            "quantity_available": 30
+            "quantity_available": 70
         }
-
     ]
-    
-
-
 }
-
-
