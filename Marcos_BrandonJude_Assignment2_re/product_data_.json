@@ -5,7 +5,7 @@
             "price": 17,
             "image": "./images/watermelon.png",
             "weight": 320,
-            "quantity_available": 90
+            "quantity_available": 85
         },
         {
             "name": "Mangosteen",
@@ -79,7 +79,7 @@
             "price": 3,
             "image": "./images/tomato.png",
             "weight": 2,
-            "quantity_available": 100
+            "quantity_available": 95
         }
     ],
     "Dairy": [
