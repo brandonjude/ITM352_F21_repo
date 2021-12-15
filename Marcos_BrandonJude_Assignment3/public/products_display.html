@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fruit Store</title>
     <script src="/product_data.js"></script>
+    <script src="/session_data.js"></script>
+    <link rel="stylesheet" href="./navigation_bar_styles.css">
     <link rel="stylesheet" href="./products_styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,104 +18,185 @@
 <!-- This file will load the order page with product data and prices -->
 
 <style>
-    html, body {
-        background-image: linear-gradient(to top, #92c8fa , white);
+    html,
+    body {
+        background-image: linear-gradient(to top, #92c8fa, white);
         height: 100%;
     }
 </style>
 
-<style>
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: #2371DC;
+
+<script>
+
+    let params = (new URL(document.location)).searchParams;
+    if (params.has('product_type')) {
+        var product_type = params.get('product_type');
+    } else {
+        alert('Must have a product key to display products!');
+        window.stop;
     }
-    
-    li {
-      float: left;
-    }
-    
-    li a {
-      font-family: 'Montserrat', sans-serif;
-      display: block;
-      color: white;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-    }
-    
-    li a:hover {
-      background-color: #739fde;
+</script>
+
+
+<script>
+    function checkQuantities(){
+        has_quantity = false;
+        for (i = 0; i < products_array[product_type].length; i++) {
+            var quantity = document.getElementById(`quantity_${i}`);
+            if (quantity.value == "" || quantity.value == 0 || quantity.value == '0'){
+                has_quantity = false;
+                continue;
+            } else {
+                has_quantity = true;
+                break;
+            }
+        }
+        if (has_quantity == false){
+            alert('No items selected. Add items.');
+        }
+        return has_quantity;
     }
 
-    #login_button {
-        float: right;
+    function checkCartData(){
+        if (Object.keys(cart_data).length == 0){
+            alert('Add items to cart to view cart.');
+            return false;
+        } else {
+            return true;
+        }
     }
-    </style>
+
+    
+</script>
+
+
 
 <script>
     //when the page loads, check the URL for existence of paramters
     window.onload = function () {
+
         let params = (new URL(document.location)).searchParams;
+        product_form = params.get('product');
         //if the alert parameter exists, load an alert on the client browser
-        if (params.has("alert_error")){
-            alert(params.get("alert_error"));
+
+        if (params.has("errors")) {
+            var errors = JSON.parse(params.get('errors'));
+            if (Object.keys(errors).length == 0) {
+                alert('Items successfully added to cart!');
+            } else {
+                // document.getElementsByName(`quantity_textbox_of_${params.get('product_name')}`).value = params.get(`quantity_textbox_of_${params.get('product_name')}`);
+                let quantities = params.get('quantity').split(',');
+                for (i in quantities) {
+                    document.getElementById(`quantity_${i}`).value = quantities[i];
+                    if (typeof errors[`quantity_${i}`] != 'undefined') {
+                        document.getElementById(`error_div_quantity_${i}`).innerHTML = errors[`quantity_${i}`];
+                        document.getElementById(`quantity_${i}`).style.backgroundColor = "#FDFF47";
+                    }
+
+                }
+
+                alert('Could not add to cart. Please fix errors below.');
+            }
         }
+
+        if (params.has('no_items_in_cart')){
+            alert("No items in cart. Add some items!")
+        }
+    }
+</script>
+
+<script>
+    function navigationbar() {
+
+        document.write(`
+            <div id="nav">
+            <ul>`);
+
+        for (p_key in products_array) {
+            document.write(`
+            <li><a href="./products_display.html?product_type=${p_key}">${p_key}</a></li>
+            `);
+        }
+
+        if (typeof user == 'undefined'){
+            document.write(`
+            <li id="login_button" class="login_button"><a href="./login.html">Login</a></li>
+            `)
+        } else {
+            document.write(`
+            <li id="logout_button" class="logout_button"><a href="/logout">Logout ${user}</a></li>
+            `);
+        }
+        document.write(`<li id="shopping_cart" class="shopping_cart"><a href="./shopping_cart.html" onclick="return checkCartData()">Cart</a></li> </ul>`);
+        
+        
+
     }
 </script>
 
 
 <body>
 
-    
-    <div class="header_container"><h1>Brandon's Premium Grocery Store</h1></div>
+    <div class="header_container">
+        <h1>Brandon's Premium Grocery Store</h1>
+    </div>
 
-    <ul>
-        <li><a class="" href="">Fruits</a></li>
-        <li><a href="">Vegetables</a></li>
-        <li><a href="">Dairy</a></li>
-        <li><a href="">Meats</a></li>
-        <li id="login_button" class="login_button"><a href="">Log In</a></li>
-    </ul>
-   
+    <script type="text/javascript">navigationbar();</script>
+
     <div class="welcome_container">
         <h3>Welcome! Shop below for the freshest products on Earth!</h3>
     </div>
 
     <br>
     <br>
-    <form action="./pre_invoice" name="purchase_form" method="post">
-        <div class="item_container">
 
-            <!-- Iterate through each product from the JSON products file and create its section on the order page -->
-        
-            <script>
-                //iterate through the products_array and load the product information into the order page
-                for (i in products_array) {
-                    document.write(`
+
+    <!-- Iterate through each product from the JSON products file and create its section on the order page -->
+    <form name="product_${i}" action="/add_to_cart" method="post" onsubmit="return checkQuantities();">
+
+        <script>
+
+
+            // product_key as a hidden input so server can get products_array quantity
+            document.write(`<input type="hidden" name="product_type" value="${product_type}">`);
+            
+            //setting up the form with for statement
+            //load the product information into the order page with for loop
+            document.write(`<div class="item_container">`)
+            for (i = 0; i < products_array[product_type].length; i++) {
+                
+                document.write(`
                     <div class="item">
-                        <img class="item_image" src=${products_array[i].image} alt="">
-                        <p class="item_name">${products_array[i].name}</p>
-                        <p class="item_price">Price: $${products_array[i].price}</p>
+                        
+                        <img class="item_image" src="${products_array[product_type][i].image}">
+                        <p class="item_name">${products_array[product_type][i].name}</p>
+                        <p class="item_price">$${products_array[product_type][i].price}</p>
                         <label for="quantity_input">Qty</label>
-                        <input type="text" name="quantity_textbox" maxlength="3" value="0">
-                        <p>In stock: ${products_array[i].quantity_available}</p>
-                        <input type="button" value="Add to Cart">
-    
-    
-                    </div>
-                `)
-                }
-            </script>
-          
-        </div>
-            <div class="submit_container">
-                <input type="submit" name="submit_button" id="submit_button" value="Checkout" onclick="">
-             </div>
-    </form>
+                        <input type="text" id="quantity_${i}" value="" placeholder="0" name="quantity[${i}]"></input>
+                        <div id="error_div_quantity_${i}" style="font-family: 'Montserrat', sans-serif;">
+                        </div>
+                        <p>In Stock: ${products_array[product_type][i].quantity_available}</p>
         
+                        
+                    
+                        
+                    
+
+                    </div>
+                
+                
+
+
+                `);
+            }
+
+            
+            document.write(`</div>`)
+
+        </script>
+        <input type="submit" name="submit_button" value="Add Items to Cart">
+    </form>
+
 
 
 </body>
